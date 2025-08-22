@@ -20,6 +20,11 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 
 
+require __DIR__ . '/admin.php';
+
+
+
+
 
 //Front Pages Route
 Route::get('/', [HomePageController::class, 'index'])->name('home');

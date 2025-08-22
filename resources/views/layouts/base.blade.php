@@ -49,18 +49,6 @@
   <link rel="icon" type="image/png" href="{{ asset('storage/app/public/'.$settings->favicon)}}">
 </head>
 
-<!-- Smartsupp Live Chat script -->
-<script type="text/javascript">
-  var _smartsupp = _smartsupp || {};
-_smartsupp.key = '52146ae80e1279b1d217e7ddbb88fb0370bf8ee5';
-window.smartsupp||(function(d) {
-  var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-  s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-  c.type='text/javascript';c.charset='utf-8';c.async=true;
-  c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
-})(document);
-</script>
-<noscript> Powered by <a href=“https://www.smartsupp.com” target=“_blank”>Smartsupp</a></noscript>
 
 <body>
 
@@ -90,10 +78,10 @@ window.smartsupp||(function(d) {
 
           <nav class="navbar navbar-expand-md navbar-light" style="">
             <a class="navbar-brand" href="/">
-              <img class="logo-light" src="{{ asset('storage/app/public/'.$settings->logo)}}"
-                alt="{{ $settings->site_name }}  " width="200" height="260">
-              <img class="logo-dark" src="{{ asset('storage/app/public/'.$settings->logo)}}"
-                alt="{{ $settings->site_name }}" width="200" height="260">
+              <img class="logo-light" src="{{ asset('storage/'.$settings->logo)}}" alt="{{ $settings->site_name }}  "
+                width="200" height="260">
+              <img class="logo-dark" src="{{ asset('storage/'.$settings->logo)}}" alt="{{ $settings->site_name }}"
+                width="200" height="260">
             </a>
 
 
@@ -201,7 +189,7 @@ window.smartsupp||(function(d) {
           <div class="col-xl-3 col-lg-5 col-md-5 col-sm-6">
             <div class="footer-widget">
               <a href="/" class="footer-logo">
-                <img src="{{ asset('storage/app/public/'.$settings->logo)}}" alt="Image">
+                <img src="{{ asset('storage/'.$settings->logo)}}" alt="Image">
               </a>
               <p class="comp-desc">
                 We are now one of the largest digital banking providers, dedicated to innovating, simplifying, and
@@ -353,7 +341,8 @@ window.smartsupp||(function(d) {
         <div class="row">
           <div class="col-md-12">
             <p class="copyright-text"><i class="ri-copyright-line"></i> <span></span>Copyright. All Rights Reserved By
-              <a href="login" target="_blank">{{$settings->site_name}}</a></p>
+              <a href="login" target="_blank">{{$settings->site_name}}</a>
+            </p>
           </div>
         </div>
       </div>
