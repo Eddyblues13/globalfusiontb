@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class TwoFactorController extends Controller
     {
         return view('auth.two_factor', [
             'title' => 'Admin Two Factor Authentication',
-            'settings' => Settings::where('id', '=', '1')->first(),
+            'settings' => Setting::where('id', '=', '1')->first(),
         ]);
     }
 }

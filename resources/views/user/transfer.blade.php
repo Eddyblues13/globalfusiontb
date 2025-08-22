@@ -40,7 +40,7 @@
         </div>
         <div class="text-end">
             <span class="text-muted small d-block">
-                <span id="accountNumber">{{ $user->account_number }}</span>
+                <span id="accountNumber">{{ $user->usernumber }}</span>
                 <i class="bi bi-copy ms-1 clickable" id="copyIcon" onclick="copyAccountNumber()"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard"></i>
             </span>
@@ -51,7 +51,7 @@
     <div class="transfer-header">
         <div class="d-flex justify-content-between align-items-center">
             <span class="text-muted">Available Balance</span>
-            <span class="balance-display">{{ $settings->s_currency ?? '$' }}{{ number_format($user->balance, 2)
+            <span class="balance-display">{{ $user->currency ?? '$' }}{{ number_format($user->account_bal, 2)
                 }}</span>
         </div>
     </div>

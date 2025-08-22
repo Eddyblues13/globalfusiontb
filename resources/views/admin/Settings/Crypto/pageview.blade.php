@@ -9,93 +9,91 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
 ?>
 @extends('layouts.app')
 @section('content')
-    @include('admin.topmenu')
-    @include('admin.sidebar')
-    <div class="main-panel ">
-        <div class="content ">
-            <div class="page-inner">
-                <div class="mt-2 mb-4">
-                    <h1 class="title1 ">Crypto Assets/Exchnage Settings</h1>
-                </div>
-                <x-danger-alert />
-                <x-success-alert />
-                <div class="mb-5 row">
-                    <div class="col-md-12">
-                        <div class="card p-3 p-md-5 shadow-lg ">
-                            <div class="row">
-                                <div class="form-group col-12 d-inline">
-                                    <h5 class="">Use this Feature</h5>
-                                    <div class="selectgroup">
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="crypto" id="cryptoyes" value="true"
-                                                class="selectgroup-input" checked="">
-                                            <span class="selectgroup-button">On</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            <input type="radio" name="crypto" id="cryptono" value="false"
-                                                class="selectgroup-input">
-                                            <span class="selectgroup-button">Off</span>
-                                        </label>
+@include('admin.topmenu')
+@include('admin.sidebar')
+<div class="main-panel ">
+    <div class="content ">
+        <div class="page-inner">
+            <div class="mt-2 mb-4">
+                <h1 class="title1 ">Crypto Assets/Exchnage Settings</h1>
+            </div>
+            <x-danger-alert />
+            <x-success-alert />
+            <div class="mb-5 row">
+                <div class="col-md-12">
+                    <div class="card p-3 p-md-5 shadow-lg ">
+                        <div class="row">
+                            <div class="form-group col-12 d-inline">
+                                <h5 class="">Use this Feature</h5>
+                                <div class="selectgroup">
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="crypto" id="cryptoyes" value="true"
+                                            class="selectgroup-input" checked="">
+                                        <span class="selectgroup-button">On</span>
+                                    </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="crypto" id="cryptono" value="false"
+                                            class="selectgroup-input">
+                                        <span class="selectgroup-button">Off</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <small class="">Your users will not be able to see/use this service if turned
+                                        off</small>
+                                </div>
+                                @if ($moresettings->use_crypto_feature == 'true')
+                                <script>
+                                    document.getElementById("cryptoyes").checked = true;
+                                </script>
+                                @else
+                                <script>
+                                    document.getElementById("cryptono").checked = true;
+                                </script>
+                                @endif
+                            </div>
+                            <div class="col-md-6 offset-md-3">
+
+                                <form action="{{ route('exchangefee') }}" method="post">
+                                    @csrf
+                                    <div class=" form-group">
+                                        <h5 class="">Exchange Fee</h5>
+                                        <input type="text" name="fee" value="{{ $moresettings->fee }}"
+                                            class=" form-control " id="">
                                     </div>
-                                    <div>
-                                        <small class="">Your users will not be able to see/use this service if turned
-                                            off</small>
+                                    @if ($settings->currency != '$')
+                                    <div class=" form-group">
+                                        <h5 class="">{{ $user->currency }}/USD Rate</h5>
+                                        <input type="number" name="rate" value="{{ $moresettings->currency_rate }}"
+                                            step=".0" class=" form-control " placeholder="450">
+                                        <small class="">This rate will be used to calculate your users crypto
+                                            equivilent in your chosen currency.</small>
                                     </div>
-                                    @if ($moresettings->use_crypto_feature == 'true')
-                                        <script>
-                                            document.getElementById("cryptoyes").checked = true;
-                                        </script>
-                                    @else
-                                        <script>
-                                            document.getElementById("cryptono").checked = true;
-                                        </script>
                                     @endif
-                                </div>
-                                <div class="col-md-6 offset-md-3">
 
-                                    <form action="{{ route('exchangefee') }}" method="post">
-                                        @csrf
-                                        <div class=" form-group">
-                                            <h5 class="">Exchange Fee</h5>
-                                            <input type="text" name="fee" value="{{ $moresettings->fee }}"
-                                                class=" form-control " id="">
-                                        </div>
-                                        @if ($settings->currency != '$')
-                                            <div class=" form-group">
-                                                <h5 class="">{{ $settings->s_currency }}/USD Rate</h5>
-                                                <input type="number" name="rate"
-                                                    value="{{ $moresettings->currency_rate }}" step=".0"
-                                                    class=" form-control " placeholder="450">
-                                                <small class="">This rate will be used to calculate your users crypto
-                                                    equivilent in your chosen currency.</small>
-                                            </div>
-                                        @endif
-
-                                        <div class=" form-group">
-                                            <button type="submit" class="btn btn-primary">Save</button>
-                                        </div>
-                                    </form>
+                                    <div class=" form-group">
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-3 col-12">
+                                <div class=" table-responsive">
+                                    <table class="table table-hover ">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Asset Name</th>
+                                                <th scope="col">Asset Symbol</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @include('admin.Settings.Crypto.assets')
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="mt-3 col-12">
-                                    <div class=" table-responsive">
-                                        <table class="table table-hover ">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Asset Name</th>
-                                                    <th scope="col">Asset Symbol</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Option</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @include('admin.Settings.Crypto.assets')
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div>
-                                        <small class="">Be sure that non of your users have balances greater than 0 in
-                                            thier asset account before you disable the asset.</small>
-                                    </div>
+                                <div>
+                                    <small class="">Be sure that non of your users have balances greater than 0 in
+                                        thier asset account before you disable the asset.</small>
                                 </div>
                             </div>
                         </div>
@@ -103,8 +101,9 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                 </div>
             </div>
         </div>
-        <script>
-            $('#cryptoyes').on('click', function() {
+    </div>
+    <script>
+        $('#cryptoyes').on('click', function() {
                 // let truevalue = $('#cryptoyes').val()
                 let uurl = "{{ url('admin/dashboard/useexchange') }}" + '/' + 'true';
                 $.ajax({
@@ -191,5 +190,5 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                     },
                 });
             });
-        </script>
+    </script>
     @endsection

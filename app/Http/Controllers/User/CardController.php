@@ -18,7 +18,7 @@ class CardController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.card', compact('cards', 'deliveryRequests'));
+        return view('user.card', compact('cards', 'deliveryRequests', 'user'));
     }
 
     public function create()

@@ -1,6 +1,6 @@
 @extends('layouts.user')
 
-@section('title', 'PayPal Withdrawal - Upward Saver')
+@section('title', 'PayPal Withdrawal - {{ $settings->site_name }}')
 
 @section('styles')
 <style>

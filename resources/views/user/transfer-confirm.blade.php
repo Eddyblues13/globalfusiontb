@@ -35,17 +35,17 @@
                 </div>
                 <div class="col-6 mb-2">
                     <small class="text-muted">Amount</small>
-                    <p class="mb-0 fw-bold">{{ $settings->s_currency ?? '$' }}{{ number_format($transfer['amount'], 2)
+                    <p class="mb-0 fw-bold">{{ $user->currency ?? '$' }}{{ number_format($transfer['amount'], 2)
                         }}</p>
                 </div>
                 <div class="col-6 mb-2">
                     <small class="text-muted">Fee (1%)</small>
-                    <p class="mb-0 text-danger">-{{ $settings->s_currency ?? '$' }}{{ number_format($transfer['amount']
+                    <p class="mb-0 text-danger">-{{ $user->currency ?? '$' }}{{ number_format($transfer['amount']
                         * 0.01, 2) }}</p>
                 </div>
                 <div class="col-12 mb-2">
                     <small class="text-muted">Net Amount</small>
-                    <p class="mb-0 fw-bold text-success">{{ $settings->s_currency ?? '$' }}{{
+                    <p class="mb-0 fw-bold text-success">{{ $user->currency ?? '$' }}{{
                         number_format($transfer['amount'] * 0.99, 2) }}</p>
                 </div>
                 @if(!empty($transfer['description']))

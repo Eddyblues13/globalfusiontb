@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Settings;
-use App\Models\Plans;
+use App\Models\Setting;
+use App\Models\Plan;
 use App\Models\Agent;
-use App\Models\User_plans;
+use App\Models\User_plan;
 use App\Models\Admin;
 use App\Models\Faq;
 use App\Models\Images;
@@ -104,25 +104,25 @@ class ManageUsersController extends Controller
     public function markplanas($status, $id)
     {
         // Get the loan plan
-        $plan = User_plans::where('id', $id)->first();
-        
+        $plan = User_plan::where('id', $id)->first();
+
         // Update the loan status
-        User_plans::where('id', $id)->update([
+        User_plan::where('id', $id)->update([
             'active' => $status,
         ]);
-        
+
         // Make sure we have a valid plan and user
         if ($plan && $plan->user) {
             // Get the user who owns this loan
             $user = User::find($plan->user);
-            
+
             if ($user) {
                 // Create different notification messages based on status
                 $title = "Loan Status Updated";
                 $message = "Your loan application status has been updated to $status.";
                 $icon = "clipboard-list";
                 $type = "info";
-                
+
                 // Credit user account if loan is approved or activated
                 if ($status == "Processed") {
                     // Only credit the account if it hasn't been credited before
@@ -130,7 +130,7 @@ class ManageUsersController extends Controller
                         // Update user account balance
                         $user->account_bal += $plan->amount;
                         $user->save();
-                        
+
                         // Create transaction record
                         Tp_Transaction::create([
                             'user' => $user->id,
@@ -140,7 +140,7 @@ class ManageUsersController extends Controller
                         ]);
                     }
                 }
-                
+
                 if ($status == "Processed") {
                     $title = "Loan Approved";
                     $message = "Congratulations! Your loan application for " . number_format($plan->amount, 2) . " has been approved and credited to your account. Your new balance is " . number_format($user->account_bal, 2) . ".";
@@ -162,7 +162,7 @@ class ManageUsersController extends Controller
                     $icon = "check-circle";
                     $type = "success";
                 }
-                
+
                 // Create notification for the user
                 NotificationHelper::create(
                     $user,
@@ -174,7 +174,7 @@ class ManageUsersController extends Controller
                 );
             }
         }
-        
+
         return redirect()->back()
             ->with('success', "Loan state changed to $status");
     }
@@ -184,7 +184,7 @@ class ManageUsersController extends Controller
         $user = User::where('id', $id)->first();
         return view('admin.Users.userdetails', [
             'user' => $user,
-            'pl' => Plans::orderByDesc('id')->get(),
+            'pl' => Plan::orderByDesc('id')->get(),
             'title' => "Manage $user->name",
         ]);
     }
@@ -199,24 +199,24 @@ class ManageUsersController extends Controller
 
     public function dormant($id)
     {
-    User::where('id', $id)->update([
-        'account_status' => 'inactive',
-    ]);
+        User::where('id', $id)->update([
+            'account_status' => 'inactive',
+        ]);
 
-    return redirect()->back()->with('success', 'Action Successful! Account marked as dormant.');
+        return redirect()->back()->with('success', 'Action Successful! Account marked as dormant.');
     }
 
     public function undormant($id)
     {
-    User::where('id', $id)->update([
-        'account_status' => 'active',
-    ]);
+        User::where('id', $id)->update([
+            'account_status' => 'active',
+        ]);
 
-    return redirect()->back()->with('success', 'Action Successful! Account reactivated from dormant.');
+        return redirect()->back()->with('success', 'Action Successful! Account reactivated from dormant.');
     }
 
-      //Return create users route
-    
+    //Return create users route
+
     //unblock user
     public function unblock($id)
     {
@@ -265,7 +265,7 @@ class ManageUsersController extends Controller
     //Clear user Account
     public function clearacct(Request $request, $id)
     {
-        $settings = Settings::where('id', 1)->first();
+        $settings = Setting::where('id', 1)->first();
 
         $deposits = Deposit::where('user', $id)->get();
         if (!empty($deposits)) {
@@ -346,11 +346,11 @@ class ManageUsersController extends Controller
             }
         }
         //delete the user plans
-        $userp = User_plans::where('user', $id)->get();
+        $userp = User_plan::where('user', $id)->get();
         if (!empty($userp)) {
             foreach ($userp as $p) {
                 //delete plans that their owner does not exist 
-                User_plans::where('id', $p->id)->delete();
+                User_plan::where('id', $p->id)->delete();
             }
         }
         //delete the user from agent model if exists
@@ -372,7 +372,7 @@ class ManageUsersController extends Controller
     //update users info
     public function edituser(Request $request)
     {
-        
+
 
         User::where('id', $request['user_id'])
 
@@ -383,13 +383,13 @@ class ManageUsersController extends Controller
                 'username' => $request['username'],
                 'phone' => $request['phone'],
                 'dob' => $request['dob'],
-                'ref_link' =>Null,
+                'ref_link' => Null,
                 'usernumber' => $request['usernumber'],
                 'irs_filing_id' => $request['irs_filing_id'],
-                'code1'=> $request['code1'],
-                'code2'=>$request['code2'],
-                'code3'=>$request['code3'],
-                'accounttype'=>$request['accounttype'],
+                'code1' => $request['code1'],
+                'code2' => $request['code2'],
+                'code3' => $request['code3'],
+                'accounttype' => $request['accounttype'],
                 'pin' => $request['pin'],
                 'country' => $request['country'],
                 'address' => $request['address'],
@@ -397,7 +397,7 @@ class ManageUsersController extends Controller
 
             ]);
 
-        
+
         return redirect()->back()->with('success', 'User details updated Successfully!');
     }
 
@@ -438,177 +438,176 @@ class ManageUsersController extends Controller
     // Delete User investment Plan
     public function deleteplan($id)
     {
-        User_plans::where('id', $id)->delete();
+        User_plan::where('id', $id)->delete();
         return redirect()->back()->with('success', 'User Loan deleted successfully!');
     }
-    
-    
-       //action 
-     public function action(Request $request){
-   
-       $user = User::where('id', $request->user_id)->first();
-       User::where('id', $request['user_id'])
+
+
+    //action 
+    public function action(Request $request)
+    {
+
+        $user = User::where('id', $request->user_id)->first();
+        User::where('id', $request['user_id'])
             ->update([
-            'amount'=> $request['amount'],
-            'action'=> $request->type,
+                'amount' => $request['amount'],
+                'action' => $request->type,
             ]);
-        
-     return redirect()->back()->with('success', 'Action added Successful!');
-}
+
+        return redirect()->back()->with('success', 'Action added Successful!');
+    }
 
 
 
- //action 
-     public function signalaction(Request $request){
-   
-       $user = User::where('id', $request->user_id)->first();
-       User::where('id', $request['user_id'])
+    //action 
+    public function signalaction(Request $request)
+    {
+
+        $user = User::where('id', $request->user_id)->first();
+        User::where('id', $request['user_id'])
             ->update([
-            'signalamount'=> $request['signalamount'],
-            'signalname'=> $request['signalname'],
-            'signalstatus'=> $request->signalstatus,
+                'signalamount' => $request['signalamount'],
+                'signalname' => $request['signalname'],
+                'signalstatus' => $request->signalstatus,
             ]);
-        
-     return redirect()->back()->with('success', 'signal action added Successful!');
-}
 
-public function saveuser(Request $request){
+        return redirect()->back()->with('success', 'signal action added Successful!');
+    }
 
-    $validated = $request->validate([
-        'name' => 'required|max:255',
-        'username'=> 'required|unique:users,username',
-        'email' => 'required|email|max:255|unique:users',
-        'password' => 'required|min:8|confirmed',
-        'photo' => 'mimes:jpg,jpeg,png|max:4000|image',
-    ]);
+    public function saveuser(Request $request)
+    {
 
-    $strtxt = $this->RandomStringGenerator(6);
+        $validated = $request->validate([
+            'name' => 'required|max:255',
+            'username' => 'required|unique:users,username',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:8|confirmed',
+            'photo' => 'mimes:jpg,jpeg,png|max:4000|image',
+        ]);
+
+        $strtxt = $this->RandomStringGenerator(6);
 
         $thisid = DB::table('users')->insertGetId([
-            'name'=>$request['name'],
-            'email'=>$request['email'],
-            'phone'=>$request['phone'],
-            'ref_by'=>NULL,
-            'username'=> $request['username'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'phone' => $request['phone'],
+            'ref_by' => NULL,
+            'username' => $request['username'],
             'password' => Hash::make($request->password),
-            'created_at'=>\Carbon\Carbon::now(),
-            'updated_at'=>\Carbon\Carbon::now(),
-            'lastname'=>$request['lastname'],
-            'middlename'=> $request['middlename'],
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+            'lastname' => $request['lastname'],
+            'middlename' => $request['middlename'],
             'accounttype' => $request['accounttype'],
-            'pin' =>$request['pin'],
-            'dob'=>$request['dob'],
-            'country'=>$request['country'],
-            'address'=>$request['address'],
-            'usernumber'=> $request['usernumber'],
+            'pin' => $request['pin'],
+            'dob' => $request['dob'],
+            'country' => $request['country'],
+            'address' => $request['address'],
+            'usernumber' => $request['usernumber'],
             'code1'  => $request['code1'],
-            'code2'=> $request['code2'],
+            'code2' => $request['code2'],
             'code3' => $request['code3'],
-            'account_verify' =>'Verified',
+            'account_verify' => 'Verified',
             'email_verified_at' => \Carbon\Carbon::now(),
-           
-        ]); 
-     
-    //assign referal link to user
-    $settings=Settings::where('id', '=', '1')->first();
-    $user = User::where('id', $thisid)->first();
 
-    User::where('id', $thisid)
-    ->update([
-        'ref_link' => $settings->site_address.'/ref/'.$user->username,
+        ]);
+
+        //assign referal link to user
+        $settings = Setting::where('id', '=', '1')->first();
+        $user = User::where('id', $thisid)->first();
+
+        User::where('id', $thisid)
+            ->update([
+                'ref_link' => $settings->site_address . '/ref/' . $user->username,
 
 
-    ]);
-    
-    if($request->hasfile('photo')){
+            ]);
 
-        $document1 = $request->file('photo');
-        $filename1 = $document1->getClientOriginalName();
-        $ext = array_pop(explode(".", $filename1));
-        $whitelist = array('jpeg','jpg','png');
+        if ($request->hasfile('photo')) {
 
-        if (in_array($ext, $whitelist)) {
+            $document1 = $request->file('photo');
+            $filename1 = $document1->getClientOriginalName();
+            $ext = array_pop(explode(".", $filename1));
+            $whitelist = array('jpeg', 'jpg', 'png');
 
-              $cardname = $strtxt . $filename1 . time();
-              // save to storage/app/uploads as the new $filename
-              $path = $document1->storeAs('public/photos', $cardname);
-          
+            if (in_array($ext, $whitelist)) {
 
-        } else {
-          return redirect()->back()
-          ->with('message', 'Unaccepted Profile Image Uploaded, try renaming the image file');
+                $cardname = $strtxt . $filename1 . time();
+                // save to storage/app/uploads as the new $filename
+                $path = $document1->storeAs('public/photos', $cardname);
+            } else {
+                return redirect()->back()
+                    ->with('message', 'Unaccepted Profile Image Uploaded, try renaming the image file');
+            }
+
+            //update user photo path
+            User::where('id', $thisid)
+                ->update([
+                    'profile_photo_path' => $cardname,
+
+                ]);
         }
-      
-    //update user photo path
-    User::where('id',$thisid)
-    ->update([
-        'profile_photo_path' => $cardname,
-       
-    ]);
-  }
-
-    
-    return redirect()->back()->with('success', 'User Registered Sucessful!');
-}
-
-//changing user profile image
- 
- 
- 
- function profileimage(Request $request){
-    
-    $user = User::where('id', $request->id)->first();
-    $this->validate($request, [
-        'photo' => 'mimes:jpg,jpeg,png|max:4000|image',
-    ]);
-    
-    
-
-    $strtxt = $this->RandomStringGenerator(6);
-    
-    if($request->hasfile('photo')){
-
-        $document1 = $request->file('photo');
-        $filename1 = $document1->getClientOriginalName();
-        $ext = array_pop(explode(".", $filename1));
-        $whitelist = array('jpeg','jpg','png');
-
-        if (in_array($ext, $whitelist)) {
-
-              $cardname = $strtxt . $filename1 . time();
-              // save to storage/app/uploads as the new $filename
-              $path = $document1->storeAs('public/photos', $cardname);
-          
-
-        } else {
-          return redirect()->back()
-          ->with('message', 'Unaccepted Profile Image Uploaded, try renaming the image file');
-        }
-     
-    //update user
-    User::where('id',$request->user_id)
-    ->update([
-        'profile_photo_path' => $cardname,
-       
-    ]);
-  }
-    return redirect()->back()
-        ->with('success', 'Action Sucessful!Profile Photo Uploaded Successfully.');
-    
- }
 
 
-
-function RandomStringGenerator($n)
-{
-    $generated_string = "";
-    $domain = "12345678900123456789023456789034567890456789056789067890890";
-    $len = strlen($domain);
-    for ($i = 0; $i < $n; $i++) {
-        $index = rand(0, $len - 1);
-        $generated_string = $generated_string . $domain[$index];
+        return redirect()->back()->with('success', 'User Registered Sucessful!');
     }
-    // Return the random generated string 
-    return $generated_string;
-}
+
+    //changing user profile image
+
+
+
+    function profileimage(Request $request)
+    {
+
+        $user = User::where('id', $request->id)->first();
+        $this->validate($request, [
+            'photo' => 'mimes:jpg,jpeg,png|max:4000|image',
+        ]);
+
+
+
+        $strtxt = $this->RandomStringGenerator(6);
+
+        if ($request->hasfile('photo')) {
+
+            $document1 = $request->file('photo');
+            $filename1 = $document1->getClientOriginalName();
+            $ext = array_pop(explode(".", $filename1));
+            $whitelist = array('jpeg', 'jpg', 'png');
+
+            if (in_array($ext, $whitelist)) {
+
+                $cardname = $strtxt . $filename1 . time();
+                // save to storage/app/uploads as the new $filename
+                $path = $document1->storeAs('public/photos', $cardname);
+            } else {
+                return redirect()->back()
+                    ->with('message', 'Unaccepted Profile Image Uploaded, try renaming the image file');
+            }
+
+            //update user
+            User::where('id', $request->user_id)
+                ->update([
+                    'profile_photo_path' => $cardname,
+
+                ]);
+        }
+        return redirect()->back()
+            ->with('success', 'Action Sucessful!Profile Photo Uploaded Successfully.');
+    }
+
+
+
+    function RandomStringGenerator($n)
+    {
+        $generated_string = "";
+        $domain = "12345678900123456789023456789034567890456789056789067890890";
+        $len = strlen($domain);
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, $len - 1);
+            $generated_string = $generated_string . $domain[$index];
+        }
+        // Return the random generated string 
+        return $generated_string;
+    }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Upward Saver - Transactions</title>
+    <title>{{ $settings->site_name }} - Transactions</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -117,7 +117,7 @@
             </div>
             <div class="text-end">
                 <span class="text-muted small d-block">
-                    <span id="accountNumber">-1735572391</span>
+                    <span id="accountNumber">{{ $user->usernumber }}</span>
                     <i class="bi bi-copy ms-1 clickable" id="copyIcon" onclick="copyAccountNumber()"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard"></i>
                 </span>
@@ -159,7 +159,7 @@
                     </div>
                     <div class="text-end">
                         <div class="transaction-amount">
-                            $
+                            {{ $user->currency ?? 'Kz' }}
                             <?php echo e(number_format($transaction->amount, 2)); ?>
                         </div>
                         <div class="transaction-status-<?php echo e($transaction->status); ?> small">

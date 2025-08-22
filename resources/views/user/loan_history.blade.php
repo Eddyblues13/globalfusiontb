@@ -25,10 +25,10 @@
                 </span>
             </div>
             <p class="mb-1">
-                <strong>Amount:</strong> {{ $settings->s_currency }}{{ number_format($loan->amount, 2) }}<br>
-                <strong>Total Payable:</strong> {{ $settings->s_currency }}{{ number_format($loan->total_amount, 2)
+                <strong>Amount:</strong> {{ $user->currency }}{{ number_format($loan->amount, 2) }}<br>
+                <strong>Total Payable:</strong> {{ $user->currency }}{{ number_format($loan->total_amount, 2)
                 }}<br>
-                <strong>Monthly Payment:</strong> {{ $settings->s_currency }}{{ number_format($loan->monthly_payment, 2)
+                <strong>Monthly Payment:</strong> {{ $user->currency }}{{ number_format($loan->monthly_payment, 2)
                 }}
             </p>
             <small class="text-muted">

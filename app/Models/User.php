@@ -192,7 +192,7 @@ class User extends Authenticatable implements MustVerifyEmail
     // }
 
     // public function plans(){
-    //     return $this->hasMany(User_plans::class,'user', 'id');
+    //     return $this->hasMany(User_plan::class,'user', 'id');
     // }
 
     public static function search($search): \Illuminate\Database\Eloquent\Builder

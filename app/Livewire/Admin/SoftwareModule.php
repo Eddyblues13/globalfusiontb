@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Livewire\Admin;
 
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Traits\PingServer;
 use Livewire\Component;
 
@@ -17,7 +17,7 @@ class SoftwareModule extends Component
 
     public function updateModule($module, $value)
     {
-        $settings = Settings::find(1);
+        $settings = Setting::find(1);
 
         if ($module == 'membership' or $module == 'signal') {
 

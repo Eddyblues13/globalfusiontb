@@ -4,7 +4,7 @@ namespace App\Http\Livewire\User;
 
 use App\Mail\NewNotification;
 use App\Models\BncTransaction;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Wdmethod;
 use App\Traits\BinanceApi;
@@ -41,7 +41,7 @@ class CryptoWithdaw extends Component
 
     public function withdraw()
     {
-        $settings = Settings::where('id', '1')->first();
+        $settings = Setting::where('id', '1')->first();
         $method = Wdmethod::where('name', $this->payment_mode)->first();
         //get user
         $user = User::where('id', Auth::user()->id)->first();

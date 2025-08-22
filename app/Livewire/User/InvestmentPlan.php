@@ -3,8 +3,8 @@
 namespace App\Http\Livewire\User;
 
 use App\Mail\NewNotification;
-use App\Models\Plans;
-use App\Models\Settings;
+use App\Models\Plan;
+use App\Models\Setting;
 use App\Models\Tp_Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -33,7 +33,7 @@ class InvestmentPlan extends Component
     public function render()
     {
         return view('livewire.user.investment-plan', [
-            'plans' => Plans::orderByDesc('id')->get(),
+            'plans' => Plan::orderByDesc('id')->get(),
         ]);
     }
 
@@ -181,7 +181,7 @@ class InvestmentPlan extends Component
                     ]);
 
                 //send notification
-                $settings = Settings::where('id', '=', '1')->first();
+                $settings = Setting::where('id', '=', '1')->first();
                 $message = "This is to inform you that $user->name just purchased an investment plan: $plan->name";
                 $subject = "$user->name just purchased an investment plan";
                 Mail::to($settings->contact_email)->send(new NewNotification($message, $subject, 'Admin'));

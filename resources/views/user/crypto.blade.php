@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Upward Saver - Crypto</title>
+    <title>{{ $settings->site_name }} - Crypto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -147,7 +147,7 @@
             </div>
             <div class="text-end">
                 <span class="text-muted small d-block">
-                    <span id="accountNumber">-1735572391</span>
+                    <span id="accountNumber">{{ $user->usernumber }}</span>
                     <i class="bi bi-copy ms-1 clickable" id="copyIcon" onclick="copyAccountNumber()"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard"></i>
                 </span>
@@ -160,18 +160,19 @@
                 <i class="bi bi-currency-bitcoin me-3" style="font-size: 24px; color: #f7931a;"></i>
                 <div>
                     <div class="small-text">Main Balance</div>
-                    <div class="balance-amount">$0.00</div>
+                    <div class="balance-amount">{{ Auth::user()->currency }} {{ Auth::user()->account_bal }}</div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
                     <div class="account-detail">ACC TYPE</div>
-                    <div class="account-value">Savings</div>
+                    <div class="account-value">{{ Auth::user()->accounttype }}</div>
                 </div>
                 <div class="col-6">
                     <div class="account-detail">ACCOUNT OWNER</div>
-                    <div class="account-value">Mary Zannelle</div>
+                    <div class="account-value">{{ Auth::user()->name }} {{ Auth::user()->middlename }} {{
+                        Auth::user()->lastname }}</div>
                 </div>
             </div>
         </div>

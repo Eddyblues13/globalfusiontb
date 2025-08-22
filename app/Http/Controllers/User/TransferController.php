@@ -50,7 +50,7 @@ class TransferController extends Controller
             'account_number' => 'required|string|max:255',
             'bank_name' => 'required|string|max:255',
             'routing_number' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0.01|max:' . $user->balance,
+            'amount' => 'required|numeric|min:0.01|max:' . $user->account_bal,
             'transaction_pin' => 'required|digits:4',
             'description' => 'nullable|string|max:500',
         ]);
@@ -64,14 +64,16 @@ class TransferController extends Controller
         $validated = $validator->validated();
 
         // Verify transaction PIN
-        if (!Hash::check($validated['transaction_pin'], $user->transaction_pin)) {
+        // Verify transaction PIN
+        if ($validated['transaction_pin'] !== $user->pin) {
             return redirect()->back()
                 ->with('error', 'Invalid transaction PIN')
                 ->withInput();
         }
 
+
         // Check if user has sufficient balance
-        if ($user->balance < $validated['amount']) {
+        if ($user->account_bal < $validated['amount']) {
             return redirect()->back()
                 ->with('error', 'Insufficient balance for this transfer')
                 ->withInput();
@@ -146,8 +148,8 @@ class TransferController extends Controller
             $amountDetails = Transaction::calculateNetAmount($transferData['amount'], $feePercentage);
 
             // Deduct amount from user balance (including fee)
-            $user->balance -= $amountDetails['amount'];
-            $user->save();
+            // $user->account_bal -= $amountDetails['amount'];
+            // $user->save();
 
             // Create transaction record using the new structure
             $transaction = Transaction::create([

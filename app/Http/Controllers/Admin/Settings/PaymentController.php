@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\SettingsCont;
 use App\Models\Wdmethod;
 use App\Models\Paystack;
@@ -23,7 +23,7 @@ class PaymentController extends Controller
             'methods' => $paymethod,
             'cpd' => Cp_transaction::where('id', '=', '1')->first(),
             'paystack' => Paystack::where('id', '=', '1')->first(),
-            'settings' => Settings::where('id', '=', '1')->first(),
+            'settings' => Setting::where('id', '=', '1')->first(),
         ]);
     }
 
@@ -71,7 +71,7 @@ class PaymentController extends Controller
         return view('admin.Settings.PaymentSettings.editpaymethod', [
             'title' => 'Update Payment Method',
             'method' => $paymethod,
-            'settings' => Settings::where('id', '=', '1')->first(),
+            'settings' => Setting::where('id', '=', '1')->first(),
         ]);
     }
 

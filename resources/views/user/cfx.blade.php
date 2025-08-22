@@ -170,7 +170,8 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <div class="small-text">Available Balance</div>
-                    <div class="balance-display"> {{ $settings->s_currency ?? 'Kz' }}{{ number_format($user->balance, 2)
+                    <div class="balance-display"> {{ $user->currency ?? 'Kz' }}{{
+                        number_format($user->account_bal, 2)
                         }}</div>
                 </div>
                 <a href="{{ route('deposit.index') }}" class="btn btn-outline-main">Add Funds</a>
@@ -394,7 +395,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Amount (USD)</label>
+                                <label class="form-label">Amount ({{ Auth::user()->currency }})</label>
                                 <input type="number" name="amount" class="form-control" id="tradeAmount"
                                     placeholder="0.00" step="0.01" required>
                             </div>

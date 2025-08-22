@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Livewire\Admin;
+namespace App\Livewire\Admin;
 
 use App\Models\Deposit;
 use App\Models\Kyc;
 use App\Models\Plan;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\Tp_Transaction;
 use App\Models\User;
-use App\Models\User_plans;
+use App\Models\User_plan;
 use App\Models\Withdrawal;
 use App\Traits\PingServer;
 use Carbon\Carbon;
@@ -66,6 +66,7 @@ class ManageUsers extends Component
             $this->checkrecord = $this->users->pluck('id')->map(fn($id) => (string) $id);
         }
         return view('livewire.admin.manage-users', [
+
             'users' => $this->users,
             'plans' => Plan::all(),
         ]);
@@ -108,7 +109,7 @@ class ManageUsers extends Component
         ]);
 
         //assign referal link to user
-        $settings = Settings::where('id', '=', '1')->first();
+        $settings = Setting::where('id', '=', '1')->first();
         $user = User::where('id', $thisid)->first();
 
         User::where('id', $thisid)
@@ -126,10 +127,10 @@ class ManageUsers extends Component
         $users = DB::table('users')
             ->whereIn('id', $this->checkrecord)
             ->get();
-        $plan = Plans::where('id', $this->plan)->first();
+        $plan = Plan::where('id', $this->plan)->first();
 
         foreach ($users as $user) {
-            $userplans = User_plans::where('user', $user->id)->where('plan', $plan->id)->where('active', 'yes')->get();
+            $userplans = User_plan::where('user', $user->id)->where('plan', $plan->id)->where('active', 'yes')->get();
             if (count($userplans) > 0) {
 
                 foreach ($userplans as $uplan) {
@@ -152,7 +153,7 @@ class ManageUsers extends Component
                             'account_bal' => $user->account_bal + $amount,
                         ]);
 
-                    $dplan = User_plans::where('id', $uplan->id)->first();
+                    $dplan = User_plan::where('id', $uplan->id)->first();
                     $dplan->profit_earned = $uplan->profit_earned + $amount;
                     $dplan->save();
                 }
@@ -239,11 +240,11 @@ class ManageUsers extends Component
                     }
                 }
                 //delete the user plans
-                $userp = User_plans::where('user', $user->id)->get();
+                $userp = User_plan::where('user', $user->id)->get();
                 if (!empty($userp)) {
                     foreach ($userp as $p) {
                         //delete plans that their owner does not exist 
-                        User_plans::where('id', $p->id)->delete();
+                        User_plan::where('id', $p->id)->delete();
                     }
                 }
 

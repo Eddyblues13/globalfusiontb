@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mt4Details;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Traits\PingServer;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class SubscriptionController extends Controller
 
     public function myTradingSettings()
     {
-        $settings = Settings::find(1);
+        $settings = Setting::find(1);
         $account = $this->fetctApi('/account-profile');
 
         $response = $this->fetctApi('/master-account');

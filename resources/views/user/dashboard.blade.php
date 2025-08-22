@@ -34,7 +34,7 @@
 
         <div class="text-end">
             <span class="text-muted small d-block">
-                <span id="accountNumber">{{ $user->account_number }}</span>
+                <span id="accountNumber">{{ $user->usernumber }}</span>
                 <i class="bi bi-copy ms-1 clickable" id="copyIcon" onclick="copyAccountNumber()"
                     data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard"></i>
             </span>
@@ -48,7 +48,7 @@
     <div class="mt-2 d-flex align-items-center gap-2">
         <span class="text-muted small-text">Book Balance:</span>
         <span id="balance" class="fw-bold clickable">
-            {{ $settings->s_currency ?? 'Kz' }}{{ number_format($user->balance, 2) }}
+            {{ $user->currency ?? 'Kz' }}{{ number_format($user->account_bal, 2) }}
         </span>
     </div>
 
@@ -127,7 +127,7 @@
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-1">{{ $transaction->description }}</h6>
                 <small class="text-{{ $transaction->type === 'credit' ? 'success' : 'danger' }}">
-                    {{ $transaction->type === 'credit' ? '+' : '-' }}{{ $settings->s_currency ?? 'Kz' }}{{
+                    {{ $transaction->type === 'credit' ? '+' : '-' }}{{ $user->currency ?? 'Kz' }}{{
                     number_format($transaction->amount, 2) }}
                 </small>
             </div>

@@ -119,7 +119,7 @@ class LoanController extends Controller
     {
         // Enhanced eligibility calculation
         $baseAmount = 5000; // Base eligible amount
-        $balanceFactor = $user->balance * 3; // Up to 3x current balance
+        $balanceFactor = $user->account_bal * 3; // Up to 3x current balance
         $incomeFactor = 2000; // Assume monthly income factor
 
         // Consider user's transaction history
@@ -168,9 +168,9 @@ class LoanController extends Controller
                 ]);
 
                 // Add loan amount to user's balance
-                $user = $transaction->user;
-                $user->balance += $transaction->amount;
-                $user->save();
+                // $user = $transaction->user;
+                // $user->account_bal += $transaction->amount;
+                // $user->save();
 
                 // Create a debit transaction for the loan disbursement
                 Transaction::create([

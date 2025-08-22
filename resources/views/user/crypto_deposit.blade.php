@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Upward Saver - Crypto Deposit</title>
+    <title>{{ $settings->site_name }} - Crypto Deposit</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -164,7 +164,7 @@
         <div class="crypto-card">
             <div class="d-flex justify-content-between align-items-center">
                 <span class="text-muted">Available Balance</span>
-                <span class="balance-display">${{ number_format($balance, 2) }}</span>
+                <span class="balance-display">{{ Auth::user()->currency }} {{ Auth::user()->account_bal }}</span>
             </div>
         </div>
 
@@ -175,7 +175,7 @@
             <form action="{{ route('user.crypto.deposit') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">Amount (USD)</label>
+                    <label class="form-label">Amount ({{ Auth::user()->currency }})</label>
                     <input type="number" name="amount" class="form-control @error('amount') is-invalid @enderror"
                         placeholder="Enter amount" step="0.01" min="0.01" required value="{{ old('amount') }}">
                     @error('amount')

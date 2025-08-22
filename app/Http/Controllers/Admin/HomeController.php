@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\Plan;
 use App\Models\SettingsCont;
 use App\Models\Agent;
-use App\Models\User_plans;
+use App\Models\User_plan;
 use App\Models\Mt4Details;
 use App\Models\Admin;
 use App\Models\Faq;
@@ -117,19 +117,19 @@ class HomeController extends Controller
     //Return create users route
     public function createnewuser()
     {
-       
+
         $usernumber = $this->RandomStringGenerator(11);
-            $code1  = $this->RandomStringGenerator(7);
-            $code2 =  $this->RandomStringGenerator(7);
-             $code3 = $this->RandomStringGenerator(7);
-             $pin =   $this->RandomStringGenerator(4);
+        $code1  = $this->RandomStringGenerator(7);
+        $code2 =  $this->RandomStringGenerator(7);
+        $code3 = $this->RandomStringGenerator(7);
+        $pin =   $this->RandomStringGenerator(4);
         return view('admin.createnewuser')
             ->with(array(
                 'title' => 'Create a user',
-                'code1'=>$code1,
-                'code2'=>$code2,
-                'code3'=>$code3,
-                'usernumber'=>$usernumber,
+                'code1' => $code1,
+                'code2' => $code2,
+                'code3' => $code3,
+                'usernumber' => $usernumber,
                 'pin' => $pin,
 
             ));
@@ -137,13 +137,13 @@ class HomeController extends Controller
 
     public function activeInvestments()
     {
-    return view('admin.Plans.activeinv', [
-        'title' => 'Active investment plans',
-        'plans' => User_plans::whereIn('active', ['Pending', 'Processed'])
-            ->orderByDesc('id')
-            ->with(['dplan', 'duser'])
-            ->get(),
-    ]);
+        return view('admin.Plans.activeinv', [
+            'title' => 'Active investment plans',
+            'plans' => User_plan::whereIn('active', ['Pending', 'Processed'])
+                ->orderByDesc('id')
+                ->with(['dplan', 'duser'])
+                ->get(),
+        ]);
     }
 
 
@@ -279,7 +279,7 @@ class HomeController extends Controller
     {
         return view('admin.Users.user_plans')
             ->with(array(
-                'plans' => User_plans::where('user', $id)->orderBy('id', 'desc')->get(),
+                'plans' => User_plan::where('user', $id)->orderBy('id', 'desc')->get(),
                 'user' => User::where('id', $id)->first(),
                 'title' => 'User Loans',
 
@@ -305,7 +305,7 @@ class HomeController extends Controller
     {
         return view('admin.referuser')->with(array(
             'title' => 'Add new Users',
-            'settings' => Settings::where('id', '=', '1')->first()
+            'settings' => Setting::where('id', '=', '1')->first()
         ));
     }
 
@@ -313,7 +313,7 @@ class HomeController extends Controller
     {
         return view('admin.addadmin')->with(array(
             'title' => 'Add new manager',
-            'settings' => Settings::where('id', '=', '1')->first()
+            'settings' => Setting::where('id', '=', '1')->first()
         ));
     }
     public function madmin()
@@ -437,15 +437,15 @@ class HomeController extends Controller
     }
 
     function RandomStringGenerator($n)
-{
-    $generated_string = "";
-    $domain = "12345678900123456789023456789034567890456789056789067890890";
-    $len = strlen($domain);
-    for ($i = 0; $i < $n; $i++) {
-        $index = rand(0, $len - 1);
-        $generated_string = $generated_string . $domain[$index];
+    {
+        $generated_string = "";
+        $domain = "12345678900123456789023456789034567890456789056789067890890";
+        $len = strlen($domain);
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, $len - 1);
+            $generated_string = $generated_string . $domain[$index];
+        }
+        // Return the random generated string 
+        return $generated_string;
     }
-    // Return the random generated string 
-    return $generated_string;
-}
 }

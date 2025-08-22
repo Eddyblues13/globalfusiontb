@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Card;
 use App\Models\CardTransaction;
 use App\Models\User;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Helpers\NotificationHelper;
 use App\Models\CardSettings;
 
@@ -20,7 +20,7 @@ class VirtualCardController extends Controller
         return view('admin.cards.index', [
             'title' => 'Manage Virtual Cards',
             'cards' => $cards,
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => Setting::where('id', '1')->first(),
         ]);
     }
 
@@ -31,7 +31,7 @@ class VirtualCardController extends Controller
         return view('admin.cards.pending', [
             'title' => 'Pending Card Applications',
             'cards' => $cards,
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => Setting::where('id', '1')->first(),
         ]);
     }
 
@@ -40,12 +40,12 @@ class VirtualCardController extends Controller
     {
         $card = Card::with('user')->findOrFail($id);
         $transactions = CardTransaction::where('card_id', $id)->latest()->paginate(10);
-        
+
         return view('admin.cards.view', [
             'title' => 'Card Details',
             'card' => $card,
             'transactions' => $transactions,
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => Setting::where('id', '1')->first(),
         ]);
     }
 
@@ -54,10 +54,10 @@ class VirtualCardController extends Controller
     {
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Generate card details based on card type
         $cardDetails = $this->generateCardDetails($card->card_type);
-        
+
         // Update card with generated details
         $card->card_number = $cardDetails['card_number'];
         $card->card_holder_name = $user->name;
@@ -70,7 +70,7 @@ class VirtualCardController extends Controller
         $card->card_token = $cardDetails['card_token'];
         $card->status = 'active';
         $card->save();
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -80,7 +80,7 @@ class VirtualCardController extends Controller
             'check-circle',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Card has been approved successfully');
     }
 
@@ -89,11 +89,11 @@ class VirtualCardController extends Controller
     {
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Update card status
         $card->status = 'rejected';
         $card->save();
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -103,7 +103,7 @@ class VirtualCardController extends Controller
             'x-circle',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Card has been rejected');
     }
 
@@ -112,11 +112,11 @@ class VirtualCardController extends Controller
     {
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Update card status
         $card->status = 'blocked';
         $card->save();
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -126,20 +126,20 @@ class VirtualCardController extends Controller
             'lock',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Card has been blocked');
     }
-    
+
     // Unblock a card
     public function unblockCard($id)
     {
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Update card status
         $card->status = 'active';
         $card->save();
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -149,10 +149,10 @@ class VirtualCardController extends Controller
             'unlock',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Card has been unblocked');
     }
-    
+
     // Top up a card
     public function topupCard(Request $request, $id)
     {
@@ -160,14 +160,14 @@ class VirtualCardController extends Controller
             'amount' => 'required|numeric|min:1',
             'description' => 'nullable|string|max:255',
         ]);
-        
+
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Update card balance
         $card->balance += $request->amount;
         $card->save();
-        
+
         // Create transaction record
         CardTransaction::create([
             'card_id' => $card->id,
@@ -181,7 +181,7 @@ class VirtualCardController extends Controller
             'description' => $request->description ?? 'Admin card top-up',
             'transaction_date' => now(),
         ]);
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -191,10 +191,10 @@ class VirtualCardController extends Controller
             'trending-up',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Card has been topped up successfully');
     }
-    
+
     // Deduct from a card
     public function deductCard(Request $request, $id)
     {
@@ -202,19 +202,19 @@ class VirtualCardController extends Controller
             'amount' => 'required|numeric|min:1',
             'description' => 'nullable|string|max:255',
         ]);
-        
+
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Check if card has sufficient balance
         if ($card->balance < $request->amount) {
             return redirect()->back()->with('error', 'Insufficient card balance');
         }
-        
+
         // Update card balance
         $card->balance -= $request->amount;
         $card->save();
-        
+
         // Create transaction record
         CardTransaction::create([
             'card_id' => $card->id,
@@ -228,7 +228,7 @@ class VirtualCardController extends Controller
             'description' => $request->description ?? 'Admin card deduction',
             'transaction_date' => now(),
         ]);
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -238,7 +238,7 @@ class VirtualCardController extends Controller
             'trending-down',
             route('cards.view', $card->id)
         );
-        
+
         return redirect()->back()->with('success', 'Amount deducted from card successfully');
     }
 
@@ -247,13 +247,13 @@ class VirtualCardController extends Controller
     {
         $card = Card::findOrFail($id);
         $user = User::findOrFail($card->user_id);
-        
+
         // Delete card transactions
         CardTransaction::where('card_id', $id)->delete();
-        
+
         // Delete card
         $card->delete();
-        
+
         // Create notification
         NotificationHelper::create(
             $user,
@@ -263,7 +263,7 @@ class VirtualCardController extends Controller
             'trash-2',
             route('cards')
         );
-        
+
         return redirect()->route('admin.cards')->with('success', 'Card has been deleted successfully');
     }
 
@@ -278,18 +278,18 @@ class VirtualCardController extends Controller
         // Set expiry date (current month + 3 years)
         $expiryMonth = str_pad(date('n'), 2, '0', STR_PAD_LEFT);
         $expiryYear = date('Y') + 3;
-        
+
         // Generate CVV (3 digits for most cards, 4 digits for Amex)
         $cvvLength = (strtolower($cardType) == 'amex' || strtolower($cardType) == 'american_express') ? 4 : 3;
         $cvv = '';
         for ($i = 0; $i < $cvvLength; $i++) {
             $cvv .= mt_rand(0, 9);
         }
-        
+
         // Generate card number based on card type
         $cardNumber = '';
         $bin = '';
-        
+
         if (strpos(strtolower($cardType), 'visa') !== false) {
             // Visa cards start with 4 and have 16 digits
             $bin = '4' . $this->generateRandomDigits(5);
@@ -311,20 +311,20 @@ class VirtualCardController extends Controller
             $bin = '9' . $this->generateRandomDigits(5);
             $cardNumber = $bin . $this->generateRandomDigits(10);
         }
-        
+
         // Apply Luhn algorithm to make the card number valid (last digit is check digit)
         $cardNumber = $this->applyLuhnAlgorithm($cardNumber);
-        
+
         // Get last four digits
         $lastFour = substr($cardNumber, -4);
-        
+
         // Generate a unique token
         $cardToken = md5($cardNumber . time() . mt_rand());
-        
+
         // Encrypt the full card number for storage (in a real system you'd use proper encryption)
         // Here we're just simulating encryption with base64 encode - in production use proper encryption
         $cardPan = base64_encode($cardNumber);
-        
+
         return [
             'card_number' => $cardNumber,
             'expiry_month' => $expiryMonth,
@@ -336,7 +336,7 @@ class VirtualCardController extends Controller
             'card_token' => $cardToken,
         ];
     }
-    
+
     /**
      * Generate random digits of specified length
      * 
@@ -351,7 +351,7 @@ class VirtualCardController extends Controller
         }
         return $digits;
     }
-    
+
     /**
      * Apply Luhn algorithm to make the card number valid
      * 
@@ -363,7 +363,7 @@ class VirtualCardController extends Controller
         // Remove the last digit if the card number already has the correct length
         // for the specific card type (16 for most, 15 for Amex)
         $numberWithoutCheckDigit = substr($cardNumber, 0, -1);
-        
+
         // Calculate the check digit
         $sum = 0;
         $length = strlen($numberWithoutCheckDigit);
@@ -377,9 +377,9 @@ class VirtualCardController extends Controller
             }
             $sum += $digit;
         }
-        
+
         $checkDigit = (10 - ($sum % 10)) % 10;
-        
+
         // Return the full card number with the check digit
         return $numberWithoutCheckDigit . $checkDigit;
     }
@@ -445,4 +445,4 @@ class VirtualCardController extends Controller
             'type' => 'success',
         ]);
     }
-} 
+}

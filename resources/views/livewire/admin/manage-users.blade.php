@@ -1,11 +1,11 @@
 @php
-    if (Auth('admin')->User()->dashboard_style == 'light') {
-        $text = 'dark';
-        $bg = 'light';
-    } else {
-        $bg = 'dark';
-        $text = 'light';
-    }
+if (Auth('admin')->User()->dashboard_style == 'light') {
+$text = 'dark';
+$bg = 'light';
+} else {
+$bg = 'dark';
+$text = 'light';
+}
 @endphp
 <div>
     <div class="main-panel">
@@ -36,48 +36,49 @@
                                     </div>
 
                                     <div class="col-6">
-                                        @if ($checkrecord)
-                                            <div>
-                                                <div class="d-flex">
-                                                    <select wire:model='action'
-                                                        class="form-control  text-{{ $text }} form-select form-select-sm"
-                                                        aria-label="Bulk actions">
-                                                        <option value="Delete">Delete</option>
-                                                        <option value="Clear">Clear Account</option>
-                                                    </select>
-                                                    <button class="btn btn-danger btn-sm ms-2"
-                                                        wire:click='delsystemuser' type="button">Apply</button>
-                                                    &nbsp;&nbsp;
-                                                    <button class="btn btn-info btn-sm " data-toggle="modal"
-                                                        data-target="#TradingModal" type="button">
-                                                        <span class="fas fa-coins"
-                                                            data-fa-transform="shrink-3 down-2"></span>
-                                                        <span class="d-none d-sm-inline-block ms-1">Add ROI</span>
-                                                    </button>
-                                                    &nbsp;&nbsp;
-                                                    <button data-toggle="modal" data-target="#topupModal"
-                                                        class="btn btn-info btn-sm " type="button">
-                                                        <span class="fas fa-plus"
-                                                            data-fa-transform="shrink-3 down-2"></span>
-                                                        <span class="d-none d-sm-inline-block ms-1">Topup</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div>
-                                                {{-- <button class="float-right btn btn-primary btn-sm" type="button"
-                                                    data-toggle="modal" data-target="#adduser">
-                                                    <span class="fas fa-user-plus"
-                                                        data-fa-transform="shrink-3 down-2"></span>
-                                                    <span class="d-none d-sm-inline-block ms-1">New User</span>
-                                                </button> --}}
+                                        @if (!empty($checkrecord))
 
-                                                <a class="btn btn-info btn-sm " href="{{ route('emailservices') }}">
-                                                    <span class="fas fa-envelope"
+                                        <div>
+                                            <div class="d-flex">
+                                                <select wire:model='action'
+                                                    class="form-control  text-{{ $text }} form-select form-select-sm"
+                                                    aria-label="Bulk actions">
+                                                    <option value="Delete">Delete</option>
+                                                    <option value="Clear">Clear Account</option>
+                                                </select>
+                                                <button class="btn btn-danger btn-sm ms-2" wire:click='delsystemuser'
+                                                    type="button">Apply</button>
+                                                &nbsp;&nbsp;
+                                                <button class="btn btn-info btn-sm " data-toggle="modal"
+                                                    data-target="#TradingModal" type="button">
+                                                    <span class="fas fa-coins"
                                                         data-fa-transform="shrink-3 down-2"></span>
-                                                    <span class="d-none d-sm-inline-block ms-1">Send Message</span>
-                                                </a>
+                                                    <span class="d-none d-sm-inline-block ms-1">Add ROI</span>
+                                                </button>
+                                                &nbsp;&nbsp;
+                                                <button data-toggle="modal" data-target="#topupModal"
+                                                    class="btn btn-info btn-sm " type="button">
+                                                    <span class="fas fa-plus"
+                                                        data-fa-transform="shrink-3 down-2"></span>
+                                                    <span class="d-none d-sm-inline-block ms-1">Topup</span>
+                                                </button>
                                             </div>
+                                        </div>
+                                        @else
+                                        <div>
+                                            {{-- <button class="float-right btn btn-primary btn-sm" type="button"
+                                                data-toggle="modal" data-target="#adduser">
+                                                <span class="fas fa-user-plus"
+                                                    data-fa-transform="shrink-3 down-2"></span>
+                                                <span class="d-none d-sm-inline-block ms-1">New User</span>
+                                            </button> --}}
+
+                                            <a class="btn btn-info btn-sm " href="{{ route('emailservices') }}">
+                                                <span class="fas fa-envelope"
+                                                    data-fa-transform="shrink-3 down-2"></span>
+                                                <span class="d-none d-sm-inline-block ms-1">Send Message</span>
+                                            </a>
+                                        </div>
                                         @endif
                                     </div>
                                 </div>
@@ -102,37 +103,39 @@
                                         <tbody id="userslisttbl">
 
                                             @forelse ($users as $user)
-                                                <tr>
-                                                    <td class="align-middle">
-                                                        <input type="checkbox" wire:model='checkrecord'
-                                                            value="{{ $user->id }}" />
-                                                    </td>
-                                                    <td><img alt="" src="{{$settings->site_address}}/storage/app/public/photos/{{$user->profile_photo_path}}" width="35" height="35" style='border-radius: 50%;'>{{ $user->name }}</td>
-                                                    <td>{{ $user->username }}</td>
-                                                    <td>{{ $user->email }}</td>
-                                                    <td>{{ $user->phone }}</td>
-                                                    <td>
-                                                        @if ($user->status == 'active')
-                                                            <span
-                                                                class='badge badge-success'>{{ $user->status }}</span>
-                                                        @else
-                                                            <span class='badge badge-danger'>{{ $user->status }}</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        {{ $user->created_at->diffForHumans() }}
-                                                    </td>
-                                                    <td>
-                                                        <a class='btn btn-secondary btn-sm'
-                                                            href="{{ route('viewuser', $user->id) }}" role='button'>
-                                                            Manage
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <td colspan="9">
-                                                    No Data Available
+                                            <tr>
+                                                <td class="align-middle">
+                                                    <input type="checkbox" wire:model='checkrecord'
+                                                        value="{{ $user->id }}" />
                                                 </td>
+                                                <td><img alt=""
+                                                        src="{{$settings->site_address}}/storage/app/public/photos/{{$user->profile_photo_path}}"
+                                                        width="35" height="35" style='border-radius: 50%;'>{{
+                                                    $user->name }}</td>
+                                                <td>{{ $user->username }}</td>
+                                                <td>{{ $user->email }}</td>
+                                                <td>{{ $user->phone }}</td>
+                                                <td>
+                                                    @if ($user->status == 'active')
+                                                    <span class='badge badge-success'>{{ $user->status }}</span>
+                                                    @else
+                                                    <span class='badge badge-danger'>{{ $user->status }}</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{ $user->created_at->diffForHumans() }}
+                                                </td>
+                                                <td>
+                                                    <a class='btn btn-secondary btn-sm'
+                                                        href="{{ route('viewuser', $user->id) }}" role='button'>
+                                                        Manage
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            @empty
+                                            <td colspan="9">
+                                                No Data Available
+                                            </td>
                                             @endforelse
                                         </tbody>
                                     </table>
@@ -158,8 +161,7 @@
                                         </select>
                                     </div>
                                     <div class="col-auto">
-                                        <select wire:model='orderdirection'
-                                            class="form-control  text-{{ $text }}">
+                                        <select wire:model='orderdirection' class="form-control  text-{{ $text }}">
                                             <option value="desc">Descending</option>
                                             <option value="asc">Ascending</option>
                                         </select>
@@ -183,8 +185,7 @@
             <div class="modal-content">
                 <div class="modal-header ">
                     <h3 class="mb-2 d-inline text-{{ $text }}">Add User</h3>
-                    <button type="button" class="close text-{{ $text }}" data-dismiss="modal"
-                        aria-h6="Close">
+                    <button type="button" class="close text-{{ $text }}" data-dismiss="modal" aria-h6="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -195,24 +196,23 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <h6 class="text-{{ $text }}">Username</h6>
-                                    <input type="text" id="usernameinput"
-                                        class="form-control  text-{{ $text }}" name="username"
-                                        wire:model.defer='username' required>
+                                    <input type="text" id="usernameinput" class="form-control  text-{{ $text }}"
+                                        name="username" wire:model.defer='username' required>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <h6 class="text-{{ $text }}">Fullname</h6>
-                                    <input type="text" class="form-control  text-{{ $text }}"
-                                        name="name" wire:model.defer='fullname' required>
+                                    <input type="text" class="form-control  text-{{ $text }}" name="name"
+                                        wire:model.defer='fullname' required>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <h6 class="text-{{ $text }}">Email</h6>
-                                    <input type="email" class="form-control  text-{{ $text }}"
-                                        name="email" wire:model.defer='email' required>
+                                    <input type="email" class="form-control  text-{{ $text }}" name="email"
+                                        wire:model.defer='email' required>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <h6 class="text-{{ $text }}">Password</h6>
-                                    <input type="text" class="form-control  text-{{ $text }}"
-                                        name="password" wire:model.defer='password' required>
+                                    <input type="text" class="form-control  text-{{ $text }}" name="password"
+                                        wire:model.defer='password' required>
                                 </div>
                             </div>
                             <button type="submit" class="px-4 btn btn-primary">Add User</button>
@@ -234,25 +234,23 @@
                 <div class="modal-header ">
                     <h4 class="modal-title text-{{ $text }}">Add ROI to selected users{{ $user->l_name }}
                     </h4>
-                    <button type="button" class="close text-{{ $text }}"
-                        data-dismiss="modal">&times;</button>
+                    <button type="button" class="close text-{{ $text }}" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body ">
                     <form role="form" method="post" wire:submit.prevent='addRoi'>
                         <div class="form-group">
                             <h5 class=" text-{{ $text }}">Select Investment Plan</h5>
-                            <select class="form-control  text-{{ $text }}" name="plan"
-                                wire:model.defer='plan' required>
+                            <select class="form-control  text-{{ $text }}" name="plan" wire:model.defer='plan' required>
                                 <option></option>
                                 @foreach ($plans as $plan)
-                                    <option value="{{ $plan->id }}">{{ $plan->name }}</option>
+                                <option value="{{ $plan->id }}">{{ $plan->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
                             <h5 class=" text-{{ $text }}">Date</h5>
-                            <input type="date" wire:model.defer='datecreated'
-                                class="form-control  text-{{ $text }}" required>
+                            <input type="date" wire:model.defer='datecreated' class="form-control  text-{{ $text }}"
+                                required>
                         </div>
                         <div class="form-group">
                             <input type="submit" class="btn " value="Add History">
@@ -277,20 +275,19 @@
             <div class="modal-content">
                 <div class="modal-header ">
                     <h4 class="modal-title text-{{ $text }}">Credit/Debit Accounts.</strong></h4>
-                    <button type="button" class="close text-{{ $text }}"
-                        data-dismiss="modal">&times;</button>
+                    <button type="button" class="close text-{{ $text }}" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body ">
                     <form method="post" wire:submit.prevent='topup'>
                         <div class="form-group">
-                            <input class="form-control  text-{{ $text }}" placeholder="Enter amount"
-                                type="number" step="any" name="amount" wire:model.defer='topamount' required>
+                            <input class="form-control  text-{{ $text }}" placeholder="Enter amount" type="number"
+                                step="any" name="amount" wire:model.defer='topamount' required>
                             <small>{{ $topamount }}</small>
                         </div>
                         <div class="form-group">
                             <h5 class="text-{{ $text }}">Select where to Credit/Debit</h5>
-                            <select class="form-control  text-{{ $text }}" wire:model.defer='topcolumn'
-                                name="type" required>
+                            <select class="form-control  text-{{ $text }}" wire:model.defer='topcolumn' name="type"
+                                required>
                                 <option value="" selected disabled>Select Column</option>
                                 <option value="Bonus">Bonus</option>
                                 <option value="balance">Account Balance</option>
@@ -298,8 +295,8 @@
                         </div>
                         <div class="form-group">
                             <h5 class="text-{{ $text }}">Select credit to add, debit to subtract.</h5>
-                            <select class="form-control  text-{{ $text }}" wire:model.defer='toptype'
-                                name="t_type" required>
+                            <select class="form-control  text-{{ $text }}" wire:model.defer='toptype' name="t_type"
+                                required>
                                 <option value="">Select type</option>
                                 <option value="Credit">Credit</option>
                                 <option value="Debit">Debit</option>

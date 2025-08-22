@@ -176,7 +176,7 @@
         <div class="crypto-card">
             <div class="d-flex justify-content-between align-items-center">
                 <span class="text-muted">Available Balance</span>
-                <span class="balance-display">${{ number_format($balance, 2) }}</span>
+                <span class="balance-display">{{ Auth::user()->currency }} {{ Auth::user()->account_bal }}</span>
             </div>
         </div>
 
@@ -192,7 +192,7 @@
                 <input type="hidden" name="email" value="{{ $email }}">
 
                 <div class="mb-3">
-                    <label class="form-label">Amount (USD)</label>
+                    <label class="form-label">Amount ({{ Auth::user()->currency }})</label>
                     <input type="number" name="amount" class="form-control @error('amount') is-invalid @enderror"
                         placeholder="Enter amount" required min="0.01" step="0.01" value="{{ old('amount') }}">
                     @error('amount')

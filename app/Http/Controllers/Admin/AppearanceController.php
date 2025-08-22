@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AppearanceSettings;
-use App\Models\Settings;
+use App\Models\Setting;
 
 class AppearanceController extends Controller
 {
@@ -20,7 +20,7 @@ class AppearanceController extends Controller
         return view('admin.appearance.index', [
             'title' => 'Appearance Settings',
             'appearanceSettings' => $appearanceSettings,
-            'settings' => Settings::where('id', '1')->first(),
+            'settings' => Setting::where('id', '1')->first(),
         ]);
     }
 
@@ -50,7 +50,7 @@ class AppearanceController extends Controller
         ]);
 
         $appearanceSettings = AppearanceSettings::first();
-        
+
         // Update all form fields
         $appearanceSettings->update([
             'primary_color' => $request->primary_color,
@@ -85,7 +85,7 @@ class AppearanceController extends Controller
     public function reset()
     {
         $appearanceSettings = AppearanceSettings::first();
-        
+
         // Reset to default values
         $appearanceSettings->update([
             'primary_color' => '#0ea5e9',
@@ -111,4 +111,4 @@ class AppearanceController extends Controller
             'type' => 'success',
         ]);
     }
-} 
+}

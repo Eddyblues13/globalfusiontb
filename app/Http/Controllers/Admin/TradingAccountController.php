@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\NewNotification;
 use App\Models\Mt4Details;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\User;
 use App\Traits\PingServer;
 use Illuminate\Http\Request;
@@ -127,7 +127,7 @@ class TradingAccountController extends Controller
         $sub->save();
 
 
-        $settings = Settings::where('id', '=', '1')->first();
+        $settings = Setting::where('id', '=', '1')->first();
         $message = "$user->name, This is to inform you that your trading account management request has been reviewed and processed. Thank you for trusting $settings->site_name";
         Mail::to($user->email)->send(new NewNotification($message, 'Subscription Account Started!', $user->name));
     }

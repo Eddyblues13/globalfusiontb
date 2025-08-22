@@ -43,7 +43,7 @@ class FXController extends Controller
             'asset_name' => 'required|string|max:255',
             'asset_type' => 'required|in:stock,crypto,forex',
             'type' => 'required|in:buy,sell',
-            'amount' => 'required|numeric|min:0.01|max:' . $user->balance,
+            'amount' => 'required|numeric|min:0.01|max:' . $user->account_bal,
             'quantity' => 'required|numeric|min:0.0001',
             'order_type' => 'required|in:market,limit,stop',
             'limit_price' => 'nullable|required_if:order_type,limit|numeric|min:0.01',
@@ -58,7 +58,7 @@ class FXController extends Controller
         $validated = $validator->validated();
 
         // Check if user has sufficient balance for buy orders
-        if ($validated['type'] === 'buy' && $user->balance < $validated['amount']) {
+        if ($validated['type'] === 'buy' && $user->account_bal < $validated['amount']) {
             return redirect()->back()
                 ->with('error', 'Insufficient balance for this trade')
                 ->withInput();
@@ -83,12 +83,12 @@ class FXController extends Controller
 
             if ($validated['type'] === 'buy') {
                 // Deduct amount from user balance for buy orders
-                $user->balance -= $validated['amount'];
+                $user->account_bal -= $validated['amount'];
                 $transactionType = 'debit';
                 $description = "Buy {$validated['quantity']} {$validated['asset_symbol']}";
             } else {
                 // For sell orders, we would typically add to balance
-                $user->balance += $validated['amount'];
+                $user->account_bal += $validated['amount'];
                 $transactionType = 'credit';
                 $description = "Sell {$validated['quantity']} {$validated['asset_symbol']}";
             }
@@ -106,7 +106,7 @@ class FXController extends Controller
             // $transaction->wallet_type = $validated['asset_type'];
             // $transaction->wallet_address = ''; // Not applicable for FX trades
             // $transaction->transaction_description = $description;
-            // $transaction->balance_after = $user->balance;
+            // $transaction->balance_after = $user->account_bal;
             // $transaction->transaction_status = 1; // Completed
             // $transaction->metadata = json_encode([
             //     'trade_id' => $trade->id,

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Upward Saver - Card Management</title>
+    <title>{{ $settings->site_name }} - Card Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <style>
@@ -175,7 +175,7 @@
             </div>
             <div class="text-end">
                 <span class="text-muted small d-block">
-                    <span id="accountNumber">{{ Auth::user()->account_number ?? '-1735572391' }}</span>
+                    <span id="accountNumber">{{ $user->usernumber }}</span>
                     <i class="bi bi-copy ms-1 clickable" id="copyIcon" onclick="copyAccountNumber()"
                         data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard"></i>
                 </span>
@@ -329,15 +329,15 @@
         <div class="transaction-box">
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted small-text">First Name</span>
-                <span>{{ Auth::user()->first_name ?? 'Mary' }}</span>
+                <span>{{ Auth::user()->name ?? 'Mary' }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted small-text">Last Name</span>
-                <span>{{ Auth::user()->last_name ?? 'Zannelle' }}</span>
+                <span>{{ Auth::user()->lastname ?? 'Zannelle' }}</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted small-text">Date of Birth</span>
-                <span>{{ Auth::user()->date_of_birth ?? '' }}</span>
+                <span>{{ Auth::user()->dob ?? '' }}</span>
             </div>
             <div class="d-flex justify-content-between">
                 <span class="text-muted small-text">Gender</span>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Models\Deposit;
 use App\Models\Tp_Transaction;
 use App\Mail\DepositStatus;
@@ -33,7 +33,7 @@ class ManageDepositController extends Controller
         $deposit = Deposit::where('id', $id)->first();
         $user = User::where('id', $deposit->user)->first();
         //get settings 
-        $settings = Settings::where('id', '=', '1')->first();
+        $settings = Setting::where('id', '=', '1')->first();
 
         $response = $this->callServer('earnings', '/process-deposit', [
             'referral_commission' => $settings->referral_commission,
@@ -42,14 +42,14 @@ class ManageDepositController extends Controller
             'depositBonus' => $settings->deposit_bonus,
         ]);
 
-    if($deposit->user==$user->id){
+        if ($deposit->user == $user->id) {
             //add funds to user's account
-            User::where('id',$user->id)
-            ->update([
-                'account_bal' => $user->account_bal + $deposit->amount,
-                'cstatus' => 'Customer',
-            ]);
-            
+            User::where('id', $user->id)
+                ->update([
+                    'account_bal' => $user->account_bal + $deposit->amount,
+                    'cstatus' => 'Customer',
+                ]);
+
             // Create notification for deposit approval
             NotificationHelper::create(
                 $user,
@@ -59,46 +59,45 @@ class ManageDepositController extends Controller
                 'check-circle',
                 route('deposits')
             );
-            
-            //get settings 
-            $settings=Settings::where('id', '=', '1')->first();
-            $earnings=$settings->referral_commission*$deposit->amount/100;
 
-            if(!empty($user->ref_by)){
-                
+            //get settings 
+            $settings = Setting::where('id', '=', '1')->first();
+            $earnings = $settings->referral_commission * $deposit->amount / 100;
+
+            if (!empty($user->ref_by)) {
+
                 //get agent
-                $agent=User::where('id',$user->ref_by)->first();
-                User::where('id',$user->ref_by)
-                ->update([
-                    'account_bal' => $agent->account_bal + $earnings,
-                    'ref_bonus' => $agent->ref_bonus + $earnings,
-                ]);
-        
+                $agent = User::where('id', $user->ref_by)->first();
+                User::where('id', $user->ref_by)
+                    ->update([
+                        'account_bal' => $agent->account_bal + $earnings,
+                        'ref_bonus' => $agent->ref_bonus + $earnings,
+                    ]);
+
                 //create history
                 Tp_Transaction::create([
                     'user' => $user->ref_by,
                     'plan' => "Credit",
-                    'amount'=>$earnings,
-                    'type'=>"Ref_bonus",
+                    'amount' => $earnings,
+                    'type' => "Ref_bonus",
                 ]);
-        
+
                 //credit commission to ancestors
                 $deposit_amount = $deposit->amount;
-                $array=User::all();
-                $parent=$user->id;
+                $array = User::all();
+                $parent = $user->id;
                 $this->getAncestors($array, $deposit_amount, $parent);
             }
 
             //Send confirmation email to user regarding his deposit and it's successful.
-            Mail::to($user->email)->send(new DepositStatus($deposit, $user,'Your Deposit have been Confirmed', false));
-    
+            Mail::to($user->email)->send(new DepositStatus($deposit, $user, 'Your Deposit have been Confirmed', false));
         }
 
         //update deposits
-        Deposit::where('id',$id)
+        Deposit::where('id', $id)
             ->update([
-            'status' => 'Processed',
-        ]);
+                'status' => 'Processed',
+            ]);
         return redirect()->back()->with('success', 'Action Sucessful!');
     }
 
@@ -110,7 +109,7 @@ class ManageDepositController extends Controller
         return view('admin.Deposits.depositimg', [
             'deposit' => $deposit,
             'title' => 'View Deposit Screenshot',
-            'settings' => Settings::where('id', '=', '1')->first(),
+            'settings' => Setting::where('id', '=', '1')->first(),
         ]);
     }
 
@@ -124,7 +123,7 @@ class ManageDepositController extends Controller
         foreach ($array as $entry) {
             if ($entry->id == $parent->ref_by) {
                 //get settings 
-                $settings = Settings::where('id', '=', '1')->first();
+                $settings = Setting::where('id', '=', '1')->first();
 
                 if ($level == 1) {
                     $earnings = $settings->referral_commission1 * $deposit_amount / 100;

@@ -5,7 +5,7 @@ namespace App\Actions\Fortify;
 use App\Models\User;
 use App\Models\Agent;
 use App\Models\Setting;
-use App\Models\Settings;
+use App\Models\Setting;
 use App\Mail\WelcomeEmail;
 use Illuminate\Http\Request;
 use App\Models\CryptoAccount;

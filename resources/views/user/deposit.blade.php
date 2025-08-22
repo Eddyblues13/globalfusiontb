@@ -299,14 +299,15 @@
 
                                 <div class="account-details">
                                     <h5 class="text-black fw-semibold mb-1">Main Balance</h5>
-                                    <div class="account-balance text-black">${{ number_format($account->balance, 2) }}
+                                    <div class="account-balance text-black"> {{ $user->currency ?? 'Kz' }}{{
+                                        number_format($user->account_bal, 2) }}
                                     </div>
                                 </div>
 
                                 <div class="d-flex flex-wrap account-meta">
                                     <div class="me-3 mb-2">
                                         <p class="small-text mb-1">ACC TYPE</p>
-                                        <span class="text-black">{{ $account->type }}</span>
+                                        <span class="text-black">{{ $user->accounttype }}</span>
                                     </div>
                                     <div class="me-3 mb-2">
                                         <p class="small-text mb-1">ACCOUNT OWNER</p>
@@ -314,7 +315,7 @@
                                     </div>
                                     <div class="me-3 mb-2">
                                         <p class="small-text mb-1">ACCOUNT NUMBER</p>
-                                        <span class="account-number text-black">{{ $account->account_number }}</span>
+                                        <span class="account-number text-black">{{ $user->usernumber }}</span>
                                     </div>
                                 </div>
                             </div>
