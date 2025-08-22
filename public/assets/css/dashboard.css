@@ -1,0 +1,253 @@
+ body {
+     background-color: #fff;
+     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+     padding-bottom: 70px;
+ }
+
+ .btn-main {
+     background-color: #fddbd3;
+     color: #b93b2d;
+     border-radius: 20px;
+     font-weight: 500;
+ }
+
+ .btn-outline-main {
+     border: 1px solid #fddbd3;
+     color: #b93b2d;
+     border-radius: 20px;
+     font-weight: 500;
+ }
+
+ .shortcut-icon {
+     width: 60px;
+     height: 60px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 22px;
+     margin-bottom: 4px;
+ }
+
+ .bg-shortcut-1 {
+     background-color: #fbe9e7;
+     color: #b93b2d;
+ }
+
+ .bg-shortcut-2 {
+     background-color: #e3f2fd;
+     color: #1565c0;
+ }
+
+ .bg-shortcut-3 {
+     background-color: #f3e5f5;
+     color: #6a1b9a;
+ }
+
+ .bg-shortcut-4 {
+     background-color: #fdf2cb;
+     color: #2c3e50;
+ }
+
+ .transaction-box {
+     background-color: #f6f6f6;
+     padding: 15px;
+     border-radius: 12px;
+ }
+
+ .bottom-nav {
+     border-top: 1px solid #ddd;
+ }
+
+ .bottom-nav .nav-link {
+     color: #888;
+     font-size: 13px;
+ }
+
+ .bottom-nav .nav-link.active {
+     color: #f26a63;
+ }
+
+ .a {
+     text-decoration: none;
+ }
+
+ .small-text {
+     font-size: 13px;
+ }
+
+ .clickable {
+     cursor: pointer;
+ }
+
+ body {
+     background-color: #fff;
+     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+     padding-bottom: 70px;
+ }
+
+ .btn-main {
+     background-color: #fddbd3;
+     color: #b93b2d;
+     border-radius: 20px;
+     font-weight: 500;
+ }
+
+ .btn-outline-main {
+     border: 1px solid #fddbd3;
+     color: #b93b2d;
+     border-radius: 20px;
+     font-weight: 500;
+ }
+
+ .shortcut-icon {
+     width: 60px;
+     height: 60px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 22px;
+     margin-bottom: 4px;
+ }
+
+ .bg-shortcut-1 {
+     background-color: #fbe9e7;
+     color: #b93b2d;
+ }
+
+ .bg-shortcut-2 {
+     background-color: #e3f2fd;
+     color: #1565c0;
+ }
+
+ .bg-shortcut-3 {
+     background-color: #f3e5f5;
+     color: #6a1b9a;
+ }
+
+ .bg-shortcut-4 {
+     background-color: #fdf2cb;
+     color: #2c3e50;
+ }
+
+ .transaction-box {
+     background-color: #f6f6f6;
+     padding: 15px;
+     border-radius: 12px;
+ }
+
+ .bottom-nav {
+     border-top: 1px solid #ddd;
+ }
+
+ .bottom-nav .nav-link {
+     color: #888;
+     font-size: 13px;
+ }
+
+ .bottom-nav .nav-link.active {
+     color: #f26a63;
+ }
+
+ .small-text {
+     font-size: 13px;
+ }
+
+ .clickable {
+     cursor: pointer;
+ }
+
+ /* Card specific styles */
+
+ .card-preview {
+     background: linear-gradient(135deg, #305C89 0%, #1a3a5a 100%);
+     border-radius: 16px;
+     padding: 20px;
+     color: white;
+     margin-bottom: 20px;
+     position: relative;
+     overflow: hidden;
+     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+ }
+
+ .card-preview::before {
+     content: "";
+     position: absolute;
+     top: -50px;
+     right: -50px;
+     width: 200px;
+     height: 200px;
+     background: rgba(255, 255, 255, 0.1);
+     border-radius: 50%;
+ }
+
+ .card-preview::after {
+     content: "";
+     position: absolute;
+     bottom: -80px;
+     right: -30px;
+     width: 200px;
+     height: 200px;
+     background: rgba(255, 255, 255, 0.05);
+     border-radius: 50%;
+ }
+
+ .card-logo {
+     width: 50px;
+     margin-bottom: 20px;
+ }
+
+ .card-number {
+     font-size: 18px;
+     letter-spacing: 2px;
+     margin: 20px 0;
+     font-family: monospace;
+ }
+
+ .card-details {
+     display: flex;
+     justify-content: space-between;
+     margin-top: 30px;
+ }
+
+ .card-name {
+     font-size: 16px;
+     text-transform: uppercase;
+ }
+
+ .card-expiry {
+     font-size: 14px;
+ }
+
+ .card-status {
+     display: inline-block;
+     padding: 5px 10px;
+     border-radius: 20px;
+     font-size: 12px;
+     font-weight: 500;
+     margin-bottom: 15px;
+ }
+
+ .status-pending {
+     background-color: #FFF3E0;
+     color: #E65100;
+ }
+
+ .status-active {
+     background-color: #E8F5E9;
+     color: #2E7D32;
+ }
+
+ .card-feature {
+     background-color: #f6f6f6;
+     padding: 15px;
+     border-radius: 12px;
+     margin-bottom: 15px;
+ }
+
+ .card-feature-icon {
+     font-size: 24px;
+     margin-right: 15px;
+     color: #b93b2d;
+ }
