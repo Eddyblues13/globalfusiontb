@@ -46,7 +46,7 @@
   <link rel="stylesheet" href="temp/custom/assets/css/responsive.css">
   <link rel="stylesheet" href="temp/custom/assets/css/dark-theme.css">
   <title>{{$settings->site_name}} - Dedicated to innovating, simplifying, and humanizing digital banking.</title>
-  <link rel="icon" type="image/png" href="{{ asset('storage/app/public/'.$settings->favicon)}}">
+  <link rel="icon" type="image/png" href="{{ asset('storage/'.$settings->favicon)}}">
 </head>
 
 

@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $settings->site_name }} | {{ $title }}</title>
-    <link rel="icon" href="{{ asset('storage/app/public/' . $settings->favicon) }}" type="image/png" />
+    <link rel="icon" href="{{ asset('storage/' . $settings->favicon) }}" type="image/png" />
 
     @section('styles')
     <script src="unpkg.com/metaapi.cloud-sdk/index.js"></script>
@@ -54,7 +54,7 @@
     @show
     @livewireStyles
 
-   
+
 
 </head>
 

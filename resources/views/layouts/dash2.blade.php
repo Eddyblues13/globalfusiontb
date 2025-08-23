@@ -8,7 +8,7 @@
     <title>{{ $settings->site_name }} | @yield('title')</title>
     <meta name="description"
         content="Swift and Secure Money Transfer to any UK bank account will become a breeze with {{$settings->site_name}}." />
-    <link rel="shortcut icon" href="{{ asset('storage/app/public/' . $settings->favicon) }}" />
+    <link rel="shortcut icon" href="{{ asset('storage/' . $settings->favicon) }}" />
 
 
     <!-- Initial theme colors setup (before anything else loads) -->
@@ -333,7 +333,7 @@
                 <!-- Logo -->
                 <div class="flex items-center justify-center flex-shrink-0 px-4 mb-6">
                     <a href="/" class="flex items-center">
-                        <img src="{{ asset('storage/app/public/'.$settings->logo)}}" alt="Logo" class="h-10 w-auto">
+                        <img src="{{ asset('storage/'.$settings->logo)}}" alt="Logo" class="h-10 w-auto">
                     </a>
                 </div>
 
@@ -526,7 +526,7 @@
                             <i data-lucide="menu" class="h-6 w-6"></i>
                         </button>
                         <a href="/" class="ml-4">
-                            <img src="{{ asset('storage/app/public/'.$settings->logo)}}" alt="Logo" class="h-8 w-auto">
+                            <img src="{{ asset('storage/'.$settings->logo)}}" alt="Logo" class="h-8 w-auto">
                         </a>
                     </div>
 
@@ -985,7 +985,7 @@
             <footer class="bg-white border-t border-gray-200 hidden md:block">
                 <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 md:flex md:items-center md:justify-between">
                     <div class="flex items-center">
-                        <img src="{{ asset('storage/app/public/'.$settings->logo)}}" alt="Logo" class="h-6 w-auto mr-2">
+                        <img src="{{ asset('storage/'.$settings->logo)}}" alt="Logo" class="h-6 w-auto mr-2">
                         <p class="text-sm text-gray-500">© {{ date('Y') }} {{ $settings->site_name }}. All rights
                             reserved.</p>
                     </div>

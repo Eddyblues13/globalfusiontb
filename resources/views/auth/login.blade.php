@@ -72,7 +72,7 @@
             <!-- Mobile Logo -->
             <div class="lg:hidden text-center mb-8">
                 <a href="/">
-                    <img src="{{ asset('storage/app/public/' . $settings->logo) }}" alt="Logo" class="h-12 mx-auto">
+                    <img src="{{ asset('storage/' . $settings->logo) }}" alt="Logo" class="h-12 mx-auto">
                 </a>
             </div>
 
