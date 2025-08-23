@@ -71,6 +71,8 @@ Route::get('/ref/{id}', 'App\Http\Controllers\Controller@ref')->name('ref');
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [ViewsController::class, 'dashboard'])->name('dashboard');
 
 
+
+
 // user routes
 Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(function () {
 

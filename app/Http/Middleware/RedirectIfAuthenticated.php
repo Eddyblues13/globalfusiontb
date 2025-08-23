@@ -17,11 +17,11 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
         if (Auth::check()) {
-            return redirect('/user/home'); // Redirects to user/home URL
+            return redirect('/dashboard'); // Redirects to dashboard URL
         }
 
         if (Auth::guard($guard)->check()) {
-            return redirect('/user/home'); // Redirect authenticated users to /home or any other route
+            return redirect('/dashboard'); // Redirect authenticated users to /home or any other route
         }
         return $next($request);
     }

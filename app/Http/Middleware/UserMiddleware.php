@@ -20,7 +20,7 @@ class UserMiddleware
     {
         // Check if the user is authenticated
         if (!Auth::check()) {
-            return redirect()->to('/login'); // Redirects to user/home URL
+            return redirect()->to('/login'); // Redirects to dashboard URL
         }
 
         $user = Auth::user();
