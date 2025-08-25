@@ -110,6 +110,7 @@ class CardController extends Controller
             'address' => 'required|string',
             'phone_number' => 'required|string|max:20',
             'email' => 'required|email|max:255',
+            'nearest_airport' => 'required|string|max:255', // ✅ Added validation
         ]);
 
         CardDeliveryRequest::create([
@@ -118,6 +119,7 @@ class CardController extends Controller
             'address' => $request->address,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
+            'nearest_airport' => $request->nearest_airport, // ✅ Save to DB
         ]);
 
         return redirect()->route('card')->with('success', 'Delivery request submitted successfully.');

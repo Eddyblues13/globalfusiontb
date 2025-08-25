@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use App\Models\Kyc;
 use App\Models\OrdersP2p;
 use App\Models\Task;
+use App\Models\Transaction;
 
 class HomeController extends Controller
 {
@@ -190,9 +191,91 @@ class HomeController extends Controller
         return view('admin.Withdrawals.mwithdrawals')
             ->with(array(
                 'title' => 'Manage users withdrawals',
-                'withdrawals' => Withdrawal::with('duser')->orderBy('id', 'desc')->get(),
+                'deposit' => Transaction::with('user')
+                    ->whereIn('type', ['bank_transfer'])
+                    ->orderBy('id', 'desc')
+                    ->get(),
 
             ));
+    }
+
+    public function manageTransfers()
+    {
+        // Get only bank transfer deposits
+        $transfers = Transaction::with('user')
+            ->where('type', 'bank_transfer')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10); // or ->get() if no pagination
+
+        return view('admin.transfers.manage')
+            ->with(array(
+                'title' => 'Manage Bank Transfers',
+                'transfers' => $transfers,
+            ));
+    }
+
+    public function viewTransfer($id)
+    {
+        $transfer = Transaction::with('user')->findOrFail($id);
+
+        // Ensure it's a bank transfer
+        if ($transfer->type != 'bank_transfer') {
+            return redirect()->route('mdeposits')->with('message', 'Not a bank transfer.');
+        }
+
+        return view('admin.transfers.view')
+            ->with(array(
+                'title' => 'View Bank Transfer',
+                'transfer' => $transfer,
+            ));
+    }
+
+    public function approveTransfer($id)
+    {
+        $transfer = Transaction::findOrFail($id);
+
+        // Check if it's a bank transfer and pending
+        if ($transfer->type != 'bank_transfer' || $transfer->status != 'pending') {
+            return redirect()->back()->with('message', 'Invalid transfer request.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Update transfer status
+            $transfer->status = 'completed';
+            $transfer->processed_at = now();
+            $transfer->save();
+
+            // Add amount to user's account balance
+            $user = User::find($transfer->user_id);
+            $user->account_bal -= $transfer->net_amount;
+            $user->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Transfer approved successfully. $' . number_format($transfer->net_amount, 2) . ' deducted to user account.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('message', 'Error approving transfer: ' . $e->getMessage());
+        }
+    }
+
+    public function declineTransfer($id)
+    {
+        $transfer = Transaction::findOrFail($id);
+
+        // Check if it's a bank transfer and pending
+        if ($transfer->type != 'bank_transfer' || $transfer->status != 'pending') {
+            return redirect()->back()->with('message', 'Invalid transfer request.');
+        }
+
+        // Update transfer status to declined
+        $transfer->status = 'declined';
+        $transfer->processed_at = now();
+        $transfer->save();
+
+        return redirect()->back()->with('success', 'Transfer has been declined.');
     }
 
     //Return manage deposits route
@@ -205,8 +288,10 @@ class HomeController extends Controller
         return view('admin.Deposits.mdeposits')
             ->with(array(
                 'title' => 'Manage users deposits',
-                'deposits' => Deposit::with('duser')->orderBy('id', 'desc')->get(),
-
+                'deposits' => Transaction::with('user')
+                    ->whereIn('type', ['bank_transfer', 'crypto_deposit', 'check_deposit'])
+                    ->orderBy('id', 'desc')
+                    ->get(),
             ));
     }
 

@@ -182,6 +182,24 @@
             </div>
         </div>
 
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
         <!-- Create Card Section (Always Visible) -->
         <div class="create-card-section mt-3">
             <h6>Create New Card</h6>
@@ -364,18 +382,21 @@
                         </div>
                         <div class="mb-3">
                             <label for="houseAddress" class="form-label">House Address</label>
-                            <textarea class="form-control" id="houseAddress" name="address"
-                                required>{{ Auth::user()->address ?? '' }}</textarea>
+                            <textarea class="form-control" id="houseAddress" name="address" required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="phoneNumber" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phoneNumber" name="phone_number"
-                                value="{{ Auth::user()->phone ?? '' }}" required>
+                            <input type="tel" class="form-control" id="phoneNumber" name="phone_number" required>
                         </div>
                         <div class="mb-3">
                             <label for="emailAddress" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="emailAddress" name="email"
-                                value="{{ Auth::user()->email }}" required>
+                            <input type="email" class="form-control" id="emailAddress" name="email" required>
+                        </div>
+                        <!-- New Nearest Airport Field -->
+                        <div class="mb-3">
+                            <label for="nearestAirport" class="form-label">Nearest Airport</label>
+                            <input type="text" class="form-control" id="nearestAirport" name="nearest_airport"
+                                placeholder="Enter your nearest airport" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -386,6 +407,7 @@
             </div>
         </div>
     </div>
+
 
     <nav class="navbar fixed-bottom bg-white bottom-nav">
         <div class="container d-flex justify-content-around text-center">

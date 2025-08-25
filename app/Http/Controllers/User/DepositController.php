@@ -31,9 +31,11 @@ class DepositController extends Controller
 
         $user = Auth::user();
 
-        // Verify transaction PIN using hashed comparison
-        if (!Hash::check($request->transaction_pin, $user->transaction_pin)) {
-            return back()->withErrors(['transaction_pin' => 'Invalid transaction PIN'])->withInput();
+        // Verify transaction PIN
+        if ($request->transaction_pin !== $user->pin) {
+            return redirect()->back()
+                ->with('error', 'Invalid transaction PIN')
+                ->withInput();
         }
 
         // Handle file upload
@@ -64,6 +66,10 @@ class DepositController extends Controller
 
     public function success()
     {
-        return view('user.deposit-success');
+        $user = Auth::user();
+
+        return view('user.deposit', [
+            'user' => $user
+        ]);
     }
 }

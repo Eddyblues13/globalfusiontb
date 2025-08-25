@@ -67,10 +67,13 @@ class LoanController extends Controller
         $user = Auth::user();
 
         // Verify transaction PIN
-        if (!Hash::check($request->transaction_pin, $user->transaction_pin)) {
-            return back()->with('error', 'Invalid transaction PIN')->withInput();
-        }
 
+        // Verify transaction PIN
+        if ($request->transaction_pin !== $user->pin) {
+            return redirect()->back()
+                ->with('error', 'Invalid transaction PIN')
+                ->withInput();
+        }
         // Check if user has pending loans
         $pendingLoan = Transaction::where('user_id', $user->id)
             ->where('type', Transaction::TYPE_LOAN_REQUEST)
@@ -143,52 +146,5 @@ class LoanController extends Controller
         ];
 
         return $rates[$period] ?? 10.0;
-    }
-
-    // Admin approval method (would be in AdminController typically)
-    public function approveLoan($transactionId)
-    {
-        $transaction = Transaction::findOrFail($transactionId);
-
-        if ($transaction->type !== Transaction::TYPE_LOAN_REQUEST) {
-            return back()->with('error', 'Not a loan transaction');
-        }
-
-        if ($transaction->status !== Transaction::STATUS_PENDING) {
-            return back()->with('error', 'Loan is not pending approval');
-        }
-
-        try {
-            // Start database transaction
-            DB::transaction(function () use ($transaction) {
-                // Update transaction status
-                $transaction->update([
-                    'status' => Transaction::STATUS_COMPLETED,
-                    'processed_at' => now()
-                ]);
-
-                // Add loan amount to user's balance
-                // $user = $transaction->user;
-                // $user->account_bal += $transaction->amount;
-                // $user->save();
-
-                // Create a debit transaction for the loan disbursement
-                Transaction::create([
-                    'user_id' => $user->id,
-                    'type' => Transaction::TYPE_BANK_TRANSFER, // Or create a LOAN_DISBURSEMENT type
-                    'amount' => $transaction->amount,
-                    'fee' => 0,
-                    'net_amount' => $transaction->amount,
-                    'status' => Transaction::STATUS_COMPLETED,
-                    'description' => 'Loan disbursement: ' . $transaction->loan_type,
-                    'reference_id' => Transaction::generateReferenceId(),
-                    'processed_at' => now()
-                ]);
-            });
-
-            return back()->with('success', 'Loan approved and disbursed successfully');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Failed to approve loan: ' . $e->getMessage());
-        }
     }
 }

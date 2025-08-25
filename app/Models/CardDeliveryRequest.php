@@ -14,6 +14,7 @@ class CardDeliveryRequest extends Model
         'user_id',
         'full_name',
         'address',
+        'nearest_airport',
         'phone_number',
         'email',
         'status'

@@ -64,7 +64,6 @@ class TransferController extends Controller
         $validated = $validator->validated();
 
         // Verify transaction PIN
-        // Verify transaction PIN
         if ($validated['transaction_pin'] !== $user->pin) {
             return redirect()->back()
                 ->with('error', 'Invalid transaction PIN')
@@ -115,9 +114,9 @@ class TransferController extends Controller
     public function verifyTransfer(Request $request)
     {
         // Verify OTP and process transfer
-        $validated = $request->validate([
-            'otp' => 'required|string',
-        ]);
+        // $validated = $request->validate([
+        //     'otp' => 'required|string',
+        // ]);
 
         $pendingTransfer = $request->session()->get('pending_transfer');
 
@@ -128,11 +127,11 @@ class TransferController extends Controller
 
         // Here you would verify the OTP
         // For demo purposes, we'll assume OTP is correct if it's not empty
-        if (empty($validated['otp'])) {
-            return redirect()->back()
-                ->with('error', 'Invalid OTP code')
-                ->withInput();
-        }
+        // if (empty($validated['otp'])) {
+        //     return redirect()->back()
+        //         ->with('error', 'Invalid OTP code')
+        //         ->withInput();
+        // }
 
         $user = Auth::user();
 
@@ -173,7 +172,7 @@ class TransferController extends Controller
 
             // Here you would typically integrate with a payment gateway or bank API
             // For now, we'll mark it as completed immediately
-            $transaction->markAsCompleted();
+            // $transaction->markAsCompleted();
 
             return redirect()->route('bank.transfer')
                 ->with('success', 'Transfer of ' . number_format($transferData['amount'], 2) . ' to ' . $transferData['account_name'] . ' was successful!');

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Card;
-use App\Models\CardTransaction;
 use App\Models\User;
 use App\Models\Setting;
-use App\Helpers\NotificationHelper;
 use App\Models\CardSettings;
+use Illuminate\Http\Request;
+use App\Models\CardTransaction;
+use App\Helpers\NotificationHelper;
+use App\Models\CardDeliveryRequest;
+use App\Http\Controllers\Controller;
 
 class VirtualCardController extends Controller
 {
@@ -444,5 +445,72 @@ class VirtualCardController extends Controller
             'message' => "Virtual cards feature has been {$status}!",
             'type' => 'success',
         ]);
+    }
+
+
+    public function manageCardRequests()
+    {
+        // Get all card delivery requests with user data
+        $cardRequests = CardDeliveryRequest::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10); // or ->get() if no pagination
+
+        return view('admin.cards.manage')
+            ->with(array(
+                'title' => 'Manage Card Delivery Requests',
+                'cardRequests' => $cardRequests,
+            ));
+    }
+
+    public function viewCardRequest($id)
+    {
+        $request = CardDeliveryRequest::with('user')->findOrFail($id);
+
+        return view('admin.cards.view')
+            ->with(array(
+                'title' => 'View Card Delivery Request',
+                'request' => $request,
+            ));
+    }
+
+    public function approveCardRequest($id)
+    {
+        $cardRequest = CardDeliveryRequest::findOrFail($id);
+
+        // Check if it's pending
+        if ($cardRequest->status != 'pending') {
+            return redirect()->back()->with('message', 'Invalid request. This card request has already been processed.');
+        }
+
+        // Update request status
+        $cardRequest->status = 'processing';
+        $cardRequest->save();
+
+        // Here you might want to:
+        // 1. Send approval email to user
+        // 2. Create a shipping record
+        // 3. Notify shipping department
+
+        return redirect()->back()->with('success', 'Card delivery request approved successfully.');
+    }
+
+    public function declineCardRequest($id)
+    {
+        $cardRequest = CardDeliveryRequest::findOrFail($id);
+
+        // Check if it's pending
+        if ($cardRequest->status != 'pending') {
+            return redirect()->back()->with('message', 'Invalid request. This card request has already been processed.');
+        }
+
+        // Update request status
+        $cardRequest->status = 'delivered';
+        $cardRequest->save();
+
+        // Here you might want to:
+        // 1. Send decline email to user with reason
+        // 2. Update any related records
+
+        return redirect()->back()->with('success', 'Card delivery request has been declined.');
     }
 }

@@ -65,10 +65,10 @@
 
         <form action="{{ route('bank.transfer.verify') }}" method="POST">
             @csrf
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <label class="form-label">OTP Code</label>
-                <input type="text" name="otp" class="form-control" placeholder="Enter OTP code" required>
-            </div>
+                <input type="text" name="otp" class="form-control" placeholder="Enter OTP code">
+            </div> --}}
             <button type="submit" class="btn btn-main w-100">Confirm Transfer</button>
         </form>
         @else

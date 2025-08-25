@@ -28,7 +28,8 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
             <x-success-alert />
             <div class="mb-5 row">
                 <div class="col-lg-8 offset-lg-2 card p-4  shadow">
-                    <img src="{{ asset('storage/' . $deposit->proof) }}" alt="Proof of Payment" class="img-fluid" />
+                    <img src="{{ asset('storage/' . $deposit->front_cheque_path) }}" alt="Proof of Payment"
+                        class="img-fluid" />
                 </div>
             </div>
         </div>

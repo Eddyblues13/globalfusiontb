@@ -78,8 +78,14 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(func
 
     // Verify account route
     // Profile routes
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::post('/personal-dp', [ProfileController::class, 'uploadProfilePicture'])->name('personal-dp.upload');
+
+    // Profile picture routes
+    Route::post('/profile/upload-dp', [ProfileController::class, 'uploadProfilePicture'])
+        ->name('personal-dp.upload');
+
+    Route::delete('/profile/delete-dp', [ProfileController::class, 'deleteProfilePicture'])
+        ->name('personal-dp.delete');
+    Route::get('/profile/picture', [ProfileController::class, 'changeProfilePicture'])->name('profile.picture');
 
     // Transaction routes
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');

@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Setting;
 use App\Models\Deposit;
-use App\Models\Tp_Transaction;
-use App\Mail\DepositStatus;
+use App\Models\Setting;
 use App\Traits\PingServer;
+use App\Mail\DepositStatus;
+use App\Models\Transaction;
+use App\Models\Tp_Transaction;
 use App\Helpers\NotificationHelper;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -104,7 +105,7 @@ class ManageDepositController extends Controller
 
     public function viewdepositimage($id)
     {
-        $deposit = Deposit::where('id', $id)->first();
+        $deposit = Transaction::where('id', $id)->first();
 
         return view('admin.Deposits.depositimg', [
             'deposit' => $deposit,

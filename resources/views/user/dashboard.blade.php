@@ -5,33 +5,29 @@
 @section('content')
 <div class="container pt-4">
     <div class="d-flex justify-content-between align-items-center">
-        <a href="{{ route('profile') }}" class="text-decoration-none text-dark d-flex align-items-center">
-            <!-- Profile Picture Circle -->
-            <div class="rounded-circle overflow-hidden me-3" style="width: 40px; height: 40px; position: relative;">
-                @if($user->profile_picture)
-                <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile" class="w-100 h-100"
-                    style="object-fit: cover;">
-                @else
-                <div class="bg-secondary w-100 h-100 d-flex align-items-center justify-content-center"
-                    onclick="event.preventDefault(); triggerFileInput()" style="cursor: pointer;">
-                    <span class="text-white">{{ substr($user->name, 0, 1) }}</span>
+        <!-- Profile Section - Now links to update page -->
+        <a href="{{ route('profile.picture') }}" class="text-decoration-none text-dark">
+            <div class="d-flex align-items-center">
+                <!-- Profile Picture Circle -->
+                <div class="rounded-circle overflow-hidden me-3" style="width: 40px; height: 40px; position: relative;">
+                    @if ($user->profile_photo_path)
+                    <img src="{{ $user->profile_photo_url }}" alt="Profile" class="w-100 h-100"
+                        style="object-fit: cover;">
+                    @else
+                    <div class="bg-secondary w-100 h-100 d-flex align-items-center justify-content-center">
+                        <span class="text-white">{{ substr($user->name, 0, 1) }}</span>
+                    </div>
+                    @endif
                 </div>
-                @endif
-            </div>
 
-            <!-- Greeting Text -->
-            <div>
-                <h6 class="mb-0 fw-semibold">Hello, {{ $user->name }}!</h6>
+                <!-- Greeting Text -->
+                <div>
+                    <h6 class="mb-0 fw-semibold">Hello, {{ $user->name }}!</h6>
+                </div>
             </div>
         </a>
 
-        <!-- Hidden Form for Profile Picture Upload -->
-        <form id="uploadForm" action="{{ route('personal-dp.upload') }}" method="POST" enctype="multipart/form-data"
-            style="display: none;">
-            @csrf
-            <input type="file" id="profilePictureInput" name="image" accept="image/*" onchange="uploadProfilePicture()">
-        </form>
-
+        <!-- Account Number + Copy -->
         <div class="text-end">
             <span class="text-muted small d-block">
                 <span id="accountNumber">{{ $user->usernumber }}</span>
@@ -152,42 +148,29 @@
     </div>
     @endif
 </div>
-
-
 @endsection
 
 @section('scripts')
 <script>
-    function triggerFileInput() {
-            document.getElementById('profilePictureInput').click();
-        }
-
-        function uploadProfilePicture() {
-            document.getElementById('uploadForm').submit();
-        }
-        
-        function copyAccountNumber() {
-            const accountNumber = document.getElementById('accountNumber').textContent;
-            navigator.clipboard.writeText(accountNumber).then(() => {
-                // Show success message or tooltip
-                const tooltip = new bootstrap.Tooltip(document.getElementById('copyIcon'), {
-                    title: 'Copied!',
-                    trigger: 'manual'
-                });
-                tooltip.show();
-                
-                setTimeout(() => {
-                    tooltip.hide();
-                }, 2000);
+    /* ✅ Copy account number */
+    function copyAccountNumber() {
+        const accountNumber = document.getElementById('accountNumber').textContent;
+        navigator.clipboard.writeText(accountNumber).then(() => {
+            const tooltip = new bootstrap.Tooltip(document.getElementById('copyIcon'), {
+                title: 'Copied!',
+                trigger: 'manual'
             });
-        }
-        
-        // Initialize tooltips
-        document.addEventListener('DOMContentLoaded', function() {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function(tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+            tooltip.show();
+            setTimeout(() => tooltip.hide(), 2000);
         });
+    }
+
+    /* ✅ Init Bootstrap tooltips */
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(el) {
+            return new bootstrap.Tooltip(el);
+        });
+    });
 </script>
 @endsection

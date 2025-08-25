@@ -1,98 +1,162 @@
 <?php
 if (Auth('admin')->User()->dashboard_style == 'light') {
     $text = 'dark';
+    $bg = 'light';
 } else {
     $text = 'light';
+    $bg = 'dark';
 }
 ?>
 @extends('layouts.app')
 @section('content')
-    @include('admin.topmenu')
-    @include('admin.sidebar')
-    <div class="main-panel">
-        <div class="content ">
-            <div class="page-inner">
-                <div class="mt-2 mb-4">
-                    <h1 class="title1 ">Manage clients withdrawals</h1>
-                </div>
-                <x-danger-alert />
-                <x-success-alert />
-                <div class="mb-5 row">
-                    <div class="col card p-3 shadow ">
-                        <div class="bs-example widget-shadow table-responsive" data-example-id="hoverable-table">
-                            <span style="margin:3px;">
-                                <table id="ShipTable" class="table table-hover ">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Account Holder</th>
-                                            <th>Amount </th>
-                                            <th>Description</th>
-                                            <th>Type</th>
-                                            <th>Beneficiary</th>
-                                            <th>Status</th>
-                                            <th>Date created</th>
-                                            <th>Option</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($withdrawals as $deposit)
-                                            <tr>
-                                                <th scope="row">{{ $deposit->id }}</th>
-                                                <td>{{ $deposit->duser->name }}</td>
-                                                <td>{{ $settings->currency }}{{ number_format($deposit->amount) }}</td>
-                                                <td>{{ $deposit->Description }}</td>
-                                                <td>{{ $deposit->payment_mode }}</td>
-                                                <td>
-                                                    @if($deposit->payment_mode == 'International Wire Transfer')
-                                                        {{ $deposit->accountname ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Cryptocurrency')
-                                                        {{ $deposit->crypto_currency ?? 'N/A' }} Wallet
-                                                    @elseif($deposit->payment_mode == 'PayPal')
-                                                        {{ $deposit->paypal_email ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Wise Transfer')
-                                                        {{ $deposit->wise_fullname ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Skrill')
-                                                        {{ $deposit->skrill_fullname ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Venmo')
-                                                        {{ $deposit->venmo_username ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Zelle')
-                                                        {{ $deposit->zelle_name ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Cash App')
-                                                        {{ $deposit->cash_app_tag ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Revolut')
-                                                        {{ $deposit->revolut_fullname ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'Alipay')
-                                                        {{ $deposit->alipay_fullname ?? 'N/A' }}
-                                                    @elseif($deposit->payment_mode == 'WeChat Pay')
-                                                        {{ $deposit->wechat_name ?? 'N/A' }}
-                                                    @else
-                                                        {{ $deposit->accountname ?? 'N/A' }}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($deposit->status == 'Processed')
-                                                        <span class="badge badge-success">{{ $deposit->status }}</span>
-                                                    @elseif($deposit->status == 'On-hold')
-                                                        <span class="badge badge-warning">{{ $deposit->status }}</span>
-                                                    @else
-                                                    <span class="badge badge-danger">{{ $deposit->status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ \Carbon\Carbon::parse($deposit->created_at)->toDayDateTimeString() }}
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('processwithdraw', $deposit->id) }}"
-                                                        class="m-1 btn btn-info btn-sm"><i class="fa fa-eye"></i> View</a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                        </div>
+@include('admin.topmenu')
+@include('admin.sidebar')
+<div class="main-panel ">
+    <div class="content ">
+        <div class="page-inner">
+            <div class="mt-2 mb-5">
+                <h1 class="title1 d-inline text-{{ $text }}">Bank Transfer Details</h1>
+                <div class="d-inline">
+                    <div class="float-right btn-group">
+                        <a class="btn btn-primary btn-sm" href="{{ route('mdeposits') }}"> <i
+                                class="fa fa-arrow-left"></i>
+                            back</a>
                     </div>
                 </div>
             </div>
+            <x-danger-alert />
+            <x-success-alert />
+
+            @if($deposit->type == 'bank_transfer')
+            <div class="mb-5 row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="card p-4 shadow">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="text-{{ $text }}">Transfer Details</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th class="text-{{ $text }}">Reference ID</th>
+                                            <td>{{ $deposit->reference_id }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">User</th>
+                                            <td>{{ $deposit->user->name }} (ID: {{ $deposit->user_id }})</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Amount</th>
+                                            <td>${{ number_format($deposit->amount, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Fee</th>
+                                            <td>${{ number_format($deposit->fee, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Net Amount</th>
+                                            <td>${{ number_format($deposit->net_amount, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Status</th>
+                                            <td>
+                                                <span
+                                                    class="badge badge-{{ $deposit->status == 'completed' ? 'success' : ($deposit->status == 'pending' ? 'warning' : 'danger') }}">
+                                                    {{ ucfirst($deposit->status) }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Date Submitted</th>
+                                            <td>{{ $deposit->created_at->format('M d, Y H:i:s') }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4 class="text-{{ $text }}">Bank Information</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th class="text-{{ $text }}">Account Name</th>
+                                            <td>{{ $deposit->account_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Account Number</th>
+                                            <td>{{ $deposit->account_number }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Bank Name</th>
+                                            <td>{{ $deposit->bank_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-{{ $text }}">Routing Number</th>
+                                            <td>{{ $deposit->routing_number }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                @if($deposit->status == 'pending')
+                                <div class="mt-4 p-3 border rounded">
+                                    <h5 class="text-{{ $text }}">Process Transfer</h5>
+                                    <p class="text-muted">Current user balance: ${{
+                                        number_format($deposit->user->account_bal, 2) }}</p>
+
+                                    <form action="{{ route('approve-transfer', $deposit->id) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success"
+                                            onclick="return confirm('Approve this transfer? ${{ number_format($deposit->net_amount, 2) }} will be added to user account.')">
+                                            <i class="fa fa-check-circle"></i> Approve Transfer
+                                        </button>
+                                    </form>
+
+                                    <form action="{{ route('decline-transfer', $deposit->id) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Decline this transfer? This action cannot be undone.')">
+                                            <i class="fa fa-times-circle"></i> Decline Transfer
+                                        </button>
+                                    </form>
+                                </div>
+                                @else
+                                <div class="mt-4 p-3 border rounded">
+                                    <h5 class="text-{{ $text }}">Transfer Status</h5>
+                                    <p>This transfer has already been processed.</p>
+                                    @if($deposit->status == 'completed')
+                                    <p class="text-success">Amount was added to user account on: {{
+                                        $deposit->processed_at->format('M d, Y H:i:s') }}</p>
+                                    @endif
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if($deposit->description)
+                        <div class="mt-4">
+                            <h5 class="text-{{ $text }}">Additional Notes</h5>
+                            <div class="p-3 border rounded">
+                                {{ $deposit->description }}
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @else
+            <div class="mb-5 row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="alert alert-danger">
+                        <h4>Not a Bank Transfer</h4>
+                        <p>This deposit is not a bank transfer. It is a {{ ucfirst(str_replace('_', ' ',
+                            $deposit->type)) }} deposit.</p>
+                        <a href="{{ route('mdeposits') }}" class="btn btn-primary mt-2">Return to Deposits</a>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
+</div>
 @endsection

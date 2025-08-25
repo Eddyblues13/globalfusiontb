@@ -37,7 +37,7 @@ Route::prefix('admin')->group(function () {
 	Route::post('logout', [LoginController::class, 'adminlogout'])->name('adminlogout');
 	Route::get('dashboard', [LoginController::class, 'validate_admin'])->name('validate_admin');
 });
- 
+
 // Two Factor controller for Admin.
 Route::get('admin/2fa', [TwoFactorController::class, 'showTwoFactorForm'])->name('2fa');
 Route::post('admin/twofa', [TwoFactorController::class, 'verifyTwoFactor'])->name('twofalogin');
@@ -86,7 +86,11 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::get('dashboard/email-services',  [HomeController::class, 'emailServices'])->name('emailservices');
 	Route::get('dashboard/createnewuser',  [HomeController::class, 'createnewuser'])->name('createnewuser');
 	Route::get('dashboard/about',  [HomeController::class, 'aboutonlinetrade'])->name('aboutonlinetrade');
-	Route::get('dashboard/mwithdrawals',  [HomeController::class, 'mwithdrawals'])->name('mwithdrawals');
+	Route::get('dashboard/mwithdrawals',  [HomeController::class, 'manageTransfers'])->name('mwithdrawals');
+	// Bank transfer management routes
+	Route::get('/admin/dashboard/view-transfer/{id}', [HomeController::class, 'viewTransfer'])->name('viewtransfer');
+	Route::post('/admin/dashboard/approve-transfer/{id}', [HomeController::class, 'approveTransfer'])->name('approve-transfer');
+	Route::post('/admin/dashboard/decline-transfer/{id}', [HomeController::class, 'declineTransfer'])->name('decline-transfer');
 	Route::get('dashboard/mdeposits', [HomeController::class, 'mdeposits'])->name('mdeposits');
 	Route::get('dashboard/agents',  [HomeController::class, 'agents'])->name('agents');
 	Route::get('dashboard/addmanager', [HomeController::class, 'addmanager'])->name('addmanager');
@@ -104,8 +108,8 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::post('dashboard/addplan', [InvPlanController::class, 'addplan'])->name('addplan');
 	Route::post('dashboard/updateplan', [InvPlanController::class, 'updateplan'])->name('updateplan');
 	Route::post('dashboard/topup', [TopupController::class, 'topup'])->name('topup');
-	Route::post('dashboard/action', [ManageUsersController::class , 'action'])->name('action');
-	Route::post('dashboard/signalaction', [ManageUsersController::class , 'signalaction'])->name('signalaction');
+	Route::post('dashboard/action', [ManageUsersController::class, 'action'])->name('action');
+	Route::post('dashboard/signalaction', [ManageUsersController::class, 'signalaction'])->name('signalaction');
 	Route::post('dashboard/sendmailsingle', [ManageUsersController::class, 'sendmailtooneuser'])->name('sendmailtooneuser');
 	Route::post('dashboard/AddHistory', [ManageUsersController::class, 'addHistory'])->name('addhistory');
 	Route::post('dashboard/profileimage', [ManageUsersController::class, 'profileimage'])->name('profileimage');
@@ -193,7 +197,7 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::post('dashboard/processkyc', [KycController::class, 'processKyc'])->name('processkyc');
 	Route::get('dashboard/kyc-application/{id}', [HomeController::class, 'viewKycApplication'])->name('viewkyc');
 
-    Route::get('dashboard/dormant/{id}', [ManageUsersController::class, 'dormant']);
+	Route::get('dashboard/dormant/{id}', [ManageUsersController::class, 'dormant']);
 	Route::get('dashboard/undormant/{id}', [ManageUsersController::class, 'undormant']);
 	Route::get('dashboard/uublock/{id}', [ManageUsersController::class, 'ublock']);
 	Route::get('dashboard/uunblock/{id}', [ManageUsersController::class, 'unblock']);
@@ -303,7 +307,7 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::get('delete-id', [SignalProvderController::class, 'deleteChatId'])->name('delete.id');
 	//subscribers
 	Route::get('signal-subscribers', [SignalProvderController::class, 'subscribers'])->name('signal.subs');
-	
+
 	// Virtual Cards Management
 	Route::get('cards', [App\Http\Controllers\Admin\VirtualCardController::class, 'index'])->name('admin.cards');
 	Route::get('cards/pending', [App\Http\Controllers\Admin\VirtualCardController::class, 'pending'])->name('admin.cards.pending');
@@ -318,7 +322,14 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 	Route::post('cards/topup/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'topupCard'])->name('admin.cards.topup');
 	Route::post('cards/deduct/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'deductCard'])->name('admin.cards.deduct');
 	Route::get('cards/delete/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'deleteCard'])->name('admin.cards.delete');
-	
+
+
+	// Card delivery request management routes
+	Route::get('/admin/dashboard/manage-card-requests', [App\Http\Controllers\Admin\VirtualCardController::class, 'manageCardRequests'])->name('manage-card-requests');
+	Route::get('/admin/dashboard/view-card-request/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'viewCardRequest'])->name('view-card-request');
+	Route::post('/admin/dashboard/approve-card-request/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'approveCardRequest'])->name('approve-card-request');
+	Route::post('/admin/dashboard/decline-card-request/{id}', [App\Http\Controllers\Admin\VirtualCardController::class, 'declineCardRequest'])->name('decline-card-request');
+
 	// IRS Refund Management
 	Route::prefix('irs-refunds')->name('admin.irs-refunds.')->group(function () {
 		Route::get('/', [App\Http\Controllers\Admin\IrsRefundController::class, 'index'])->name('index');
@@ -331,7 +342,7 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
 		Route::post('/process/{id}', [App\Http\Controllers\Admin\IrsRefundController::class, 'process'])->name('process');
 		Route::get('/delete/{id}', [App\Http\Controllers\Admin\IrsRefundController::class, 'delete'])->name('delete');
 	});
-	
+
 	// Appearance Settings
 	Route::get('appearance', [App\Http\Controllers\Admin\AppearanceController::class, 'index'])->name('admin.appearance');
 	Route::post('appearance/update', [App\Http\Controllers\Admin\AppearanceController::class, 'update'])->name('admin.appearance.update');
