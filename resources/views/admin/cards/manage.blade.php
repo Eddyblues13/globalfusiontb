@@ -51,7 +51,7 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                                         <tr>
                                             <td>#{{ $request->id }}</td>
                                             <td>
-                                                {{ $request->user->name }}<br>
+                                                {{ $request->full_name }}<br>
                                                 <small>{{ $request->user->email }}</small>
                                             </td>
                                             <td>{{ $request->full_name }}</td>
