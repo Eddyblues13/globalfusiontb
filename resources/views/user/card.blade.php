@@ -316,7 +316,7 @@
                 <span class="text-muted small-text">Request #{{ $request->id }} ({{ $request->created_at->format('M d,
                     Y') }})</span>
                 <span
-                    class="badge bg-{{ $request->status == 'delivered' ? 'success' : ($request->status == 'shipped' ? 'primary' : 'warning') }}">
+                    class="badge bg-{{ $request->status == 'delivered' ? 'completed' : ($request->status == 'shipped' ? 'primary' : 'warning') }}">
                     {{ ucfirst($request->status) }}
                 </span>
             </div>
