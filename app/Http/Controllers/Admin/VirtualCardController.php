@@ -483,7 +483,7 @@ class VirtualCardController extends Controller
         }
 
         // Update request status
-        $cardRequest->status = 'processing';
+        $cardRequest->status = 'completed';
         $cardRequest->save();
 
         // Here you might want to:
@@ -504,7 +504,7 @@ class VirtualCardController extends Controller
         }
 
         // Update request status
-        $cardRequest->status = 'completed';
+        $cardRequest->status = 'processing';
         $cardRequest->save();
 
         // Here you might want to:

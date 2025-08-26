@@ -71,7 +71,7 @@ if (Auth('admin')->User()->dashboard_style == 'light') {
                                             </td>
                                             <td>
                                                 <span
-                                                    class="badge badge-{{ $request->status == 'approved' ? 'completed' : ($request->status == 'pending' ? 'warning' : 'danger') }}">
+                                                    class="badge badge-{{ $request->status == 'completed' ? 'success' : ($request->status == 'pending' ? 'warning' : 'danger') }}">
                                                     {{ ucfirst($request->status) }}
                                                 </span>
                                             </td>
