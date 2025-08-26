@@ -504,7 +504,7 @@ class VirtualCardController extends Controller
         }
 
         // Update request status
-        $cardRequest->status = 'delivered';
+        $cardRequest->status = 'completed';
         $cardRequest->save();
 
         // Here you might want to:
