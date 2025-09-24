@@ -303,6 +303,71 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+
+        /* Account Frozen Modal Styles */
+        .account-frozen-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .frozen-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .frozen-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .profile-lock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
     </style>
     @laravelPWA
 </head>
@@ -323,6 +388,52 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Account Frozen Modal -->
+    @if(Auth::user()->account_status != 'active')
+    <div class="account-frozen-modal" id="frozenAccountModal">
+        <div class="frozen-modal-content">
+            <div class="frozen-icon">
+                <i data-lucide="lock" class="h-10 w-10"></i>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-3">Account Frozen</h2>
+
+            <p class="text-gray-600 mb-4">
+                Your account has been temporarily frozen. For more information about this restriction,
+                please contact our administration team.
+            </p>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <i data-lucide="alert-triangle" class="h-5 w-5 text-red-600 mr-2"></i>
+                    <span class="text-red-800 font-medium">Contact Administration</span>
+                </div>
+                <p class="text-red-700 text-sm mt-1">
+                    Email: {{ $settings->contact_email ?? 'admin@bank.com' }}<br>
+
+                </p>
+            </div>
+
+            <button onclick="closeFrozenModal()"
+                class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition duration-200">
+                Back to Homepage
+            </button>
+        </div>
+    </div>
+    @endif
+
+    <!-- Put script AFTER modal -->
+    <script>
+        function closeFrozenModal() {
+        const modal = document.getElementById('frozenAccountModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+    </script>
 
     <!-- Main Layout -->
     <div class="flex h-screen overflow-hidden"
@@ -858,16 +969,16 @@
                                 <span class="text-xs font-medium text-gray-700">Deposit</span>
                             </div>
                         </a>
-                                     <a href="{{ route('cheque.deposit') }}" class="group">
-    <div
-        class="aspect-square flex flex-col items-center justify-center rounded-xl bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 transition-all duration-300 p-2">
-        <div
-            class="h-10 w-10 rounded-full bg-white flex items-center justify-center mb-1 shadow-sm group-hover:shadow transition-all">
-            <i data-lucide="banknote" class="h-5 w-5 text-green-600"></i>
-        </div>
-        <span class="text-xs font-medium text-gray-700">Cheque Deposit</span>
-    </div>
-</a>
+                        <a href="{{ route('cheque.deposit') }}" class="group">
+                            <div
+                                class="aspect-square flex flex-col items-center justify-center rounded-xl bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 transition-all duration-300 p-2">
+                                <div
+                                    class="h-10 w-10 rounded-full bg-white flex items-center justify-center mb-1 shadow-sm group-hover:shadow transition-all">
+                                    <i data-lucide="banknote" class="h-5 w-5 text-green-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-700">Cheque Deposit</span>
+                            </div>
+                        </a>
                         <a href="{{ route('loan') }}" class="group">
                             <div
                                 class="aspect-square flex flex-col items-center justify-center rounded-xl bg-gradient-to-br from-secondary-50 to-secondary-100 hover:from-secondary-100 hover:to-secondary-200 transition-all duration-300 p-2">
@@ -1074,6 +1185,64 @@
             s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
             var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
         })();
+    </script>
+
+
+    <!-- Enhanced Page Loading Animation -->
+    <script>
+        window.onload = function() {
+        const preloader = document.querySelector('.page-loading');
+        
+        // Add a slight delay to make loading animation more noticeable
+        setTimeout(function() {
+            preloader.classList.remove('active');
+            setTimeout(function() {
+                preloader.remove();
+            }, 500);
+        }, 800);
+    };
+
+    // Function to close the frozen account modal
+    function closeFrozenModal() {
+        const modal = document.getElementById('frozenAccountModal');
+        if (modal) {
+            // Add fade-out animation
+            modal.style.opacity = '0';
+            modal.style.transition = 'opacity 0.3s ease-in-out';
+            
+            // Remove modal after animation completes
+            setTimeout(function() {
+                modal.remove();
+            }, 300);
+        }
+    }
+
+    // Optional: Allow closing modal by clicking outside the content
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('frozenAccountModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeFrozenModal();
+                }
+            });
+
+            // Optional: Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal) {
+                    closeFrozenModal();
+                }
+            });
+
+            // Optional: Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+            
+            // Restore scrolling when modal is closed
+            window.addEventListener('beforeunload', function() {
+                document.body.style.overflow = '';
+            });
+        }
+    });
     </script>
     @endif
 
