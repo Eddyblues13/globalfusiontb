@@ -162,15 +162,20 @@
                         <!-- Quick Amount Buttons -->
                         <div class="mt-4 flex flex-wrap gap-2">
                             <button type="button" @click="amount = '100'"
-                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">$100</button>
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">{{
+                                config('currencies.'.Auth::user()->currency, '$') }}100</button>
                             <button type="button" @click="amount = '500'"
-                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">$500</button>
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">{{
+                                config('currencies.'.Auth::user()->currency, '$') }}500</button>
                             <button type="button" @click="amount = '1000'"
-                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">$1000</button>
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">{{
+                                config('currencies.'.Auth::user()->currency, '$') }}1000</button>
                             <button type="button" @click="amount = '5000'"
-                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">$5000</button>
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">{{
+                                config('currencies.'.Auth::user()->currency, '$') }}5000</button>
                             <button type="button" @click="amount = '10000'"
-                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">$10000</button>
+                                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors">{{
+                                config('currencies.'.Auth::user()->currency, '$') }}10000</button>
                         </div>
                     </div>
 

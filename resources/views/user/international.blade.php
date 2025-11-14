@@ -429,11 +429,14 @@
                             <!-- Quick Amount Buttons -->
                             <div class="flex space-x-2">
                                 <button type="button" @click="amount = '100'"
-                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">$100</button>
+                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">{{
+                                    config('currencies.'.Auth::user()->currency, '$') }}100</button>
                                 <button type="button" @click="amount = '500'"
-                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">$500</button>
+                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">{{
+                                    config('currencies.'.Auth::user()->currency, '$') }}500</button>
                                 <button type="button" @click="amount = '1000'"
-                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">$1000</button>
+                                    class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">{{
+                                    config('currencies.'.Auth::user()->currency, '$') }}1000</button>
                                 <button type="button" @click="amount = {{ Auth::user()->account_bal }}"
                                     class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-md text-xs font-medium text-gray-700 transition-colors">Max</button>
                             </div>
@@ -556,7 +559,8 @@
                         </div>
 
                         <div>
-                            <label for="iban" class="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                            <label for="iban" class="block text-sm font-medium text-gray-700 mb-1">Account
+                                Number</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i data-lucide="credit-card" class="h-5 w-5 text-gray-400"></i>
