@@ -268,7 +268,7 @@
                                     <g opacity=".9">
                                         <path d="M48.37 15.14h34.66v56.61H48.37z" fill="#fff" />
                                         <path
-                                            d="M52.37 43.45a35.94 35.94 0 0113.75-28.3 36 36 0 100 56.61 35.94 35.94 0 01-13.75-28.31z"
+                                            d="M52.37 43.45a35.94 35.94 0 0113.75-28.3 a36 36 0 100 56.61 35.94 35.94 0 01-13.75-28.31z"
                                             fill="#fff" />
                                         <path
                                             d="M120.39 65.54V64.5h.48v-.24h-1.19v.24h.47v1.04zm2.31 0v-1.29h-.36l-.42.91-.42-.91h-.36v1.29h.26V64.9l.39.89h.27l.39-.89v.89z"
@@ -329,8 +329,7 @@
                     </a>
 
                     @if($card->status == 'active')
-                    <button type="button"
-                        onclick="openDeliveryModal('{{ $card->id }}', '{{ $card->card_holder_name }}')"
+                    <button type="button" onclick="openDeliveryModal('{{ $card->id }}')"
                         class="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
                         Request Card Delivery
                     </button>
@@ -370,7 +369,7 @@
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <div class="flex justify-between items-center pb-3 border-b">
-                <h3 class="text-lg font-medium text-gray-900">Request Cardddd Delivery</h3>
+                <h3 class="text-lg font-medium text-gray-900">Request Card Delivery</h3>
                 <button onclick="closeDeliveryModal()" class="text-gray-400 hover:text-gray-600">
                     <i data-lucide="x" class="h-5 w-5"></i>
                 </button>
@@ -499,10 +498,16 @@
 </div>
 
 <script>
-    function openDeliveryModal(cardId, cardHolderName) {
+    function openDeliveryModal(cardId) {
+        // Only set the card_id, clear other fields
         document.getElementById('card_id').value = cardId;
-        document.getElementById('full_name').value = cardHolderName;
-        document.getElementById('email').value = '{{ Auth::user()->email }}';
+        
+        // Clear the form fields so user has to type them manually
+        document.getElementById('full_name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('nearest_airport').value = '';
+        document.getElementById('phone_number').value = '';
         
         const modal = document.getElementById('deliveryModal');
         modal.classList.remove('hidden');
