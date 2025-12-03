@@ -701,8 +701,7 @@
                 <div>
                     <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                     <input type="text" name="full_name" id="full_name" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                        value="{{ Auth::user()->name }}">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                 </div>
                 <div>
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
@@ -720,14 +719,12 @@
                 <div>
                     <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                     <input type="tel" name="phone_number" id="phone_number" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                        value="{{ Auth::user()->phone }}">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                 </div>
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                     <input type="email" name="email" id="email" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                        value="{{ Auth::user()->email }}">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500">
                 </div>
             </div>
             <div class="bg-gray-50 px-6 py-3 rounded-b-lg flex justify-end space-x-3">
