@@ -370,7 +370,7 @@
     <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
         <div class="mt-3">
             <div class="flex justify-between items-center pb-3 border-b">
-                <h3 class="text-lg font-medium text-gray-900">Request Card Delivery</h3>
+                <h3 class="text-lg font-medium text-gray-900">Request Cardddd Delivery</h3>
                 <button onclick="closeDeliveryModal()" class="text-gray-400 hover:text-gray-600">
                     <i data-lucide="x" class="h-5 w-5"></i>
                 </button>
