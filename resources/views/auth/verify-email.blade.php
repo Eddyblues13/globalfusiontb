@@ -191,10 +191,16 @@
 
         const inputs = document.querySelectorAll('#digit1, #digit2, #digit3, #digit4');
         const hiddenInput = document.getElementById('verification_code');
+        const codeForm = document.querySelector('form[action*="verify-code"]');
 
         function updateHiddenCode() {
             hiddenInput.value = Array.from(inputs).map(i => i.value).join('');
         }
+
+        // Always sync hidden field before form submits
+        codeForm.addEventListener('submit', function() {
+            updateHiddenCode();
+        });
 
         inputs.forEach((input, index) => {
             input.addEventListener('input', function(e) {
@@ -205,7 +211,7 @@
                 updateHiddenCode();
                 // Auto-submit when all 4 digits are filled
                 if (hiddenInput.value.length === 4) {
-                    document.querySelector('form[action*="verify-code"]').submit();
+                    setTimeout(function() { codeForm.submit(); }, 50);
                 }
             });
 
@@ -227,7 +233,8 @@
                 updateHiddenCode();
                 // Auto-submit on paste if all 4 digits filled
                 if (hiddenInput.value.length === 4) {
-                    document.querySelector('form[action*="verify-code"]').submit();
+                    setTimeout(function() { codeForm.submit(); }, 50);
+                }
                 }
             });
         });
