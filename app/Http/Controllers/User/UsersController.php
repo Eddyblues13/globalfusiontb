@@ -25,9 +25,13 @@ class UsersController extends Controller
   public function verifyEmailCode(Request $request)
   {
     $request->validate([
-      'verification_code' => ['required', 'string', 'size:4'],
+      'digit1' => ['required', 'string', 'size:1'],
+      'digit2' => ['required', 'string', 'size:1'],
+      'digit3' => ['required', 'string', 'size:1'],
+      'digit4' => ['required', 'string', 'size:1'],
     ]);
 
+    $code = $request->digit1 . $request->digit2 . $request->digit3 . $request->digit4;
     $user = $request->user();
 
     if (!$user->email_verification_code) {
@@ -38,7 +42,7 @@ class UsersController extends Controller
       return back()->withErrors(['verification_code' => 'Verification code has expired. Please request a new one.']);
     }
 
-    if (!hash_equals($user->email_verification_code, $request->verification_code)) {
+    if (!hash_equals($user->email_verification_code, $code)) {
       return back()->withErrors(['verification_code' => 'Invalid verification code. Please try again.']);
     }
 

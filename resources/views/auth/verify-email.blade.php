@@ -18,100 +18,7 @@
 
         <!-- Card Content -->
         <div class="p-6 sm:p-8">
-            <!-- Alerts -->
-            @if ($errors->any())
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Error</h3>
-                        @foreach ($errors->all() as $error)
-                        <p class="text-sm text-red-700 mt-1">{{ $error }}</p>
-                        @endforeach
-                    </div>
-                    <div class="ml-auto pl-3">
-                        <div class="-mx-1.5 -my-1.5">
-                            <button type="button"
-                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <i data-lucide="x" class="h-4 w-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            @if (session('error'))
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Error</h3>
-                        <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
-                    </div>
-                    <div class="ml-auto pl-3">
-                        <div class="-mx-1.5 -my-1.5">
-                            <button type="button"
-                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <i data-lucide="x" class="h-4 w-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            @if (session('success'))
-            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-md">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-green-800">Success</h3>
-                        <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
-                    </div>
-                    <div class="ml-auto pl-3">
-                        <div class="-mx-1.5 -my-1.5">
-                            <button type="button"
-                                class="inline-flex rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <i data-lucide="x" class="h-4 w-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            @if (session('status'))
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-md">
-                <div class="flex items-start">
-                    <div class="flex-shrink-0">
-                        <i data-lucide="info" class="h-5 w-5 text-blue-500"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-blue-800">Information</h3>
-                        <p class="text-sm text-blue-700 mt-1">{{ session('status') }}</p>
-                    </div>
-                    <div class="ml-auto pl-3">
-                        <div class="-mx-1.5 -my-1.5">
-                            <button type="button"
-                                class="inline-flex rounded-md p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <i data-lucide="x" class="h-4 w-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endif
+            <!-- Toastr Notifications (rendered via JS below) -->
 
             <!-- Main Content -->
             <div class="text-center pt-4">
@@ -139,7 +46,6 @@
                             class="w-16 h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary-500 focus:ring-primary-500 focus:outline-none transition-colors"
                             inputmode="numeric" pattern="[0-9]" autocomplete="off" required>
                     </div>
-                    <input type="hidden" name="verification_code" id="verification_code">
 
                     <button type="submit"
                         class="inline-flex items-center justify-center w-full px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
@@ -184,23 +90,45 @@
     </div>
 </div>
 
-@push('scripts')
+@section('scripts')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         lucide.createIcons();
 
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            timeOut: 5000
+        };
+
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{ addslashes($error) }}");
+            @endforeach
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ addslashes(session('error')) }}");
+        @endif
+
+        @if (session('success'))
+            toastr.success("{{ addslashes(session('success')) }}");
+        @endif
+
+        @if (session('message'))
+            toastr.info("{{ addslashes(session('message')) }}");
+        @endif
+
+        @if (session('status'))
+            toastr.info("{{ addslashes(session('status')) }}");
+        @endif
+
         const inputs = document.querySelectorAll('#digit1, #digit2, #digit3, #digit4');
-        const hiddenInput = document.getElementById('verification_code');
         const codeForm = document.querySelector('form[action*="verify-code"]');
-
-        function updateHiddenCode() {
-            hiddenInput.value = Array.from(inputs).map(i => i.value).join('');
-        }
-
-        // Always sync hidden field before form submits
-        codeForm.addEventListener('submit', function() {
-            updateHiddenCode();
-        });
 
         inputs.forEach((input, index) => {
             input.addEventListener('input', function(e) {
@@ -208,10 +136,10 @@
                 if (this.value.length === 1 && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
-                updateHiddenCode();
                 // Auto-submit when all 4 digits are filled
-                if (hiddenInput.value.length === 4) {
-                    setTimeout(function() { codeForm.submit(); }, 50);
+                const allFilled = Array.from(inputs).every(i => i.value.length === 1);
+                if (allFilled) {
+                    setTimeout(function() { codeForm.submit(); }, 100);
                 }
             });
 
@@ -230,16 +158,14 @@
                 if (pasted.length > 0) {
                     inputs[Math.min(pasted.length, inputs.length) - 1].focus();
                 }
-                updateHiddenCode();
                 // Auto-submit on paste if all 4 digits filled
-                if (hiddenInput.value.length === 4) {
-                    setTimeout(function() { codeForm.submit(); }, 50);
+                const allFilled = Array.from(inputs).every(i => i.value.length === 1);
+                if (allFilled) {
+                    setTimeout(function() { codeForm.submit(); }, 100);
                 }
                 }
             });
         });
     });
 </script>
-@endpush
-
 @endsection
