@@ -114,7 +114,7 @@
                             class="w-16 h-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary-500 focus:ring-primary-500 focus:outline-none transition-colors"
                             inputmode="numeric" pattern="[0-9]" autocomplete="off" required>
                     </div>
-                    <input type="hidden" name="code" id="verification_code">
+                    <input type="hidden" name="verification_code" id="verification_code">
 
                     <button type="submit"
                         class="inline-flex items-center justify-center w-full px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
@@ -178,6 +178,10 @@
                     inputs[index + 1].focus();
                 }
                 updateHiddenCode();
+                // Auto-submit when all 4 digits are filled
+                if (hiddenInput.value.length === 4) {
+                    document.querySelector('form[action*="verify-code"]').submit();
+                }
             });
 
             input.addEventListener('keydown', function(e) {
@@ -196,6 +200,10 @@
                     inputs[Math.min(pasted.length, inputs.length) - 1].focus();
                 }
                 updateHiddenCode();
+                // Auto-submit on paste if all 4 digits filled
+                if (hiddenInput.value.length === 4) {
+                    document.querySelector('form[action*="verify-code"]').submit();
+                }
             });
         });
     });
