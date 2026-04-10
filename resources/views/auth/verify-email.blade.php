@@ -19,6 +19,31 @@
         <!-- Card Content -->
         <div class="p-6 sm:p-8">
             <!-- Alerts -->
+            @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Error</h3>
+                        @foreach ($errors->all() as $error)
+                        <p class="text-sm text-red-700 mt-1">{{ $error }}</p>
+                        @endforeach
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i data-lucide="x" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             @if (session('error'))
             <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
                 <div class="flex items-start">
