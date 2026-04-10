@@ -18,7 +18,100 @@
 
         <!-- Card Content -->
         <div class="p-6 sm:p-8">
-            <!-- Toastr Notifications (rendered via JS below) -->
+            <!-- Alerts -->
+            @if ($errors->any())
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Error</h3>
+                        @foreach ($errors->all() as $error)
+                        <p class="text-sm text-red-700 mt-1">{{ $error }}</p>
+                        @endforeach
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i data-lucide="x" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if (session('error'))
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Error</h3>
+                        <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i data-lucide="x" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if (session('success'))
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i data-lucide="check-circle" class="h-5 w-5 text-green-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-green-800">Success</h3>
+                        <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i data-lucide="x" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if (session('status'))
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-md">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i data-lucide="info" class="h-5 w-5 text-blue-500"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-blue-800">Information</h3>
+                        <p class="text-sm text-blue-700 mt-1">{{ session('status') }}</p>
+                    </div>
+                    <div class="ml-auto pl-3">
+                        <div class="-mx-1.5 -my-1.5">
+                            <button type="button"
+                                class="inline-flex rounded-md p-1.5 text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                onclick="this.parentElement.parentElement.parentElement.remove()">
+                                <i data-lucide="x" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
 
             <!-- Main Content -->
             <div class="text-center pt-4">
@@ -90,42 +183,10 @@
     </div>
 </div>
 
-@section('scripts')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         lucide.createIcons();
-
-        toastr.options = {
-            closeButton: true,
-            progressBar: true,
-            positionClass: 'toast-top-right',
-            timeOut: 5000
-        };
-
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                toastr.error("{{ addslashes($error) }}");
-            @endforeach
-        @endif
-
-        @if (session('error'))
-            toastr.error("{{ addslashes(session('error')) }}");
-        @endif
-
-        @if (session('success'))
-            toastr.success("{{ addslashes(session('success')) }}");
-        @endif
-
-        @if (session('message'))
-            toastr.info("{{ addslashes(session('message')) }}");
-        @endif
-
-        @if (session('status'))
-            toastr.info("{{ addslashes(session('status')) }}");
-        @endif
 
         const inputs = document.querySelectorAll('#digit1, #digit2, #digit3, #digit4');
         const codeForm = document.querySelector('form[action*="verify-code"]');
@@ -168,4 +229,6 @@
         });
     });
 </script>
+@endpush
+
 @endsection
