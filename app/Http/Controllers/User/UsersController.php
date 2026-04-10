@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Mail\NewNotification;
 use Illuminate\Support\Facades\Mail;
 use Session;
+
 class UsersController extends Controller
 {
 
@@ -20,6 +21,35 @@ class UsersController extends Controller
       'title' => 'Verify Your email address',
     ]);
   }
+
+  public function verifyEmailCode(Request $request)
+  {
+    $request->validate([
+      'verification_code' => ['required', 'string', 'size:4'],
+    ]);
+
+    $user = $request->user();
+
+    if (!$user->email_verification_code) {
+      return back()->withErrors(['verification_code' => 'No verification code found. Please request a new one.']);
+    }
+
+    if (now()->greaterThan($user->email_verification_code_expires_at)) {
+      return back()->withErrors(['verification_code' => 'Verification code has expired. Please request a new one.']);
+    }
+
+    if (!hash_equals($user->email_verification_code, $request->verification_code)) {
+      return back()->withErrors(['verification_code' => 'Invalid verification code. Please try again.']);
+    }
+
+    $user->email_verified_at = now();
+    $user->email_verification_code = null;
+    $user->email_verification_code_expires_at = null;
+    $user->save();
+
+    return redirect()->route('dashboard')->with('success', 'Email verified successfully!');
+  }
+
   public function addusername(Request $request)
   {
     Validator::make($request, [

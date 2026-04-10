@@ -32,8 +32,10 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 Route::post('/email/verification-notification', function (Request $request) {
 	$request->user()->sendEmailVerificationNotification();
-	return back()->with('message', 'Verification link sent!');
+	return back()->with('message', 'Verification code sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::post('/email/verify-code', 'App\Http\Controllers\User\UsersController@verifyEmailCode')->middleware(['auth', 'throttle:5,1'])->name('verification.verify.code');
 
 
 // Socialite login 

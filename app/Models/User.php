@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use App\Models\Settings;
+use App\Mail\EmailVerificationCode;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -21,7 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use TwoFactorAuthenticatable;
 
     /**
-     * Send the email verification notification.
+     * Send the email verification notification with a 4-digit code.
      *
      * @return void
      */
@@ -31,7 +32,13 @@ class User extends Authenticatable implements MustVerifyEmail
         $settings = Settings::where('id', 1)->first();
 
         if ($settings->enable_verification == 'true') {
-            $this->notify(new VerifyEmail);
+            $code = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
+            $this->email_verification_code = $code;
+            $this->email_verification_code_expires_at = now()->addMinutes(10);
+            $this->save();
+
+            Mail::to($this->email)->send(new EmailVerificationCode($code, $this->name));
         }
     }
 
