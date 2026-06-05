@@ -46,9 +46,9 @@ Route::get('/ref/{id}', 'App\Http\Controllers\Controller@ref')->name('ref');
 
 /*    Dashboard and user features routes  */
 // Views routes
-Route::middleware(['auth:sanctum', 'verified', 'complete.kyc'])->get('/dashboard', [ViewsController::class, 'dashboard'])->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified', 'complete.kyc', 'active.account'])->get('/dashboard', [ViewsController::class, 'dashboard'])->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'active.account'])->prefix('dashboard')->group(function () {
 
 	// Verify account route
 	Route::post('verifyaccount', [VerifyController::class, 'verifyaccount'])->name('kycsubmit');
