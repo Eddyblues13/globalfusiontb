@@ -50,6 +50,9 @@
                     <div class="relative rounded-lg shadow-sm">
                         <input 
                             type="text" 
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            x-on:input="otp = otp.replace(/[^0-9]/g, '')"
                             name="otp" 
                             id="otp_input" 
                             x-model="otp"

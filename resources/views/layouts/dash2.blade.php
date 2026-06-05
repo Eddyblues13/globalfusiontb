@@ -372,7 +372,7 @@
     @laravelPWA
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 {{ Auth::user()->account_status != 'active' ? 'overflow-hidden' : '' }}">
     <!-- Modern Page Loader -->
     <div class="page-loading active">
         <div class="page-loading-inner">
@@ -412,28 +412,20 @@
                 </div>
                 <p class="text-red-700 text-sm mt-1">
                     Email: {{ $settings->contact_email ?? 'admin@bank.com' }}<br>
-
                 </p>
             </div>
 
-            <button onclick="closeFrozenModal()"
-                class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-700 transition duration-200">
-                Back to Homepage
-            </button>
+            <a href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('logout-form-frozen').submit();"
+                class="w-full inline-flex justify-center items-center bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-medium transition duration-200">
+                <i data-lucide="log-out" class="h-5 w-5 mr-2"></i> Log Out
+            </a>
+            <form id="logout-form-frozen" action="{{ route('logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
         </div>
     </div>
     @endif
-
-    <!-- Put script AFTER modal -->
-    <script>
-        function closeFrozenModal() {
-        const modal = document.getElementById('frozenAccountModal');
-        if (modal) {
-            modal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-    }
-    </script>
 
     <!-- Main Layout -->
     <div class="flex h-screen overflow-hidden"

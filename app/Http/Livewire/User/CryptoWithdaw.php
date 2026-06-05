@@ -27,7 +27,7 @@ class CryptoWithdaw extends Component
     public function requestOtp()
     {
         sleep(2);
-        $code = $this->RandomStringGenerator(5);
+        $code = $this->RandomNumericGenerator(6);
         $user = Auth::user();
         User::where('id', $user->id)->update([
             'withdrawotp' => $code,
@@ -106,6 +106,18 @@ class CryptoWithdaw extends Component
             $generated_string = $generated_string . $domain[$index];
         }
         // Return the random generated string 
+        return $generated_string;
+    }
+
+    function RandomNumericGenerator($n)
+    {
+        $generated_string = "";
+        $domain = "1234567890";
+        $len = strlen($domain);
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, $len - 1);
+            $generated_string = $generated_string . $domain[$index];
+        }
         return $generated_string;
     }
 }

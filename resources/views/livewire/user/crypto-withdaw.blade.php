@@ -47,7 +47,7 @@
                 </div>
                 <small class="text-primary" wire:loading wire:target="requestOtp">Sending OTP to your email, please
                     wait...</small>
-                <input class="form-control" placeholder="Enter OTP" wire:model='otpCode' type="text" required>
+                <input class="form-control" placeholder="Enter OTP" wire:model='otpCode' type="text" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                 <small class="">OTP will be sent to your email when you request</small>
             </div>
         @endif
