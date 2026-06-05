@@ -311,31 +311,31 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(15, 23, 42, 0.75);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(12px);
         }
 
         .frozen-modal-content {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 500px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 460px;
             width: 90%;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            animation: modalSlideIn 0.3s ease-out;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-50px) scale(0.9);
+                transform: translateY(20px) scale(0.97);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -343,15 +343,16 @@
         }
 
         .frozen-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border-radius: 50%;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.25rem;
+            background: linear-gradient(135deg, #f43f5e, #be123c);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            box-shadow: 0 10px 20px -5px rgba(244, 63, 94, 0.4);
         }
 
         .profile-lock-badge {
@@ -393,36 +394,48 @@
     <!-- Account Frozen Modal -->
     @if(Auth::user()->account_status != 'active')
     <div class="account-frozen-modal" id="frozenAccountModal">
-        <div class="frozen-modal-content">
+        <div class="frozen-modal-content text-center">
             <div class="frozen-icon">
-                <i data-lucide="lock" class="h-10 w-10"></i>
+                <i data-lucide="lock" class="h-8 w-8"></i>
             </div>
 
-            <h2 class="text-2xl font-bold text-gray-900 mb-3">Account Frozen</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Access Restricted</h2>
 
-            <p class="text-gray-600 mb-4">
-                Your account has been temporarily frozen. For more information about this restriction,
-                please contact our administration team.
+            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                Your online banking account is temporarily restricted. Please contact our administration department to resolve this hold.
             </p>
 
-            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                <div class="flex items-center">
-                    <i data-lucide="alert-triangle" class="h-5 w-5 text-red-600 mr-2"></i>
-                    <span class="text-red-800 font-medium">Contact Administration</span>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-left">
+                <div class="flex items-center mb-1 text-slate-800 font-semibold text-sm">
+                    <i data-lucide="info" class="h-4 w-4 text-slate-500 mr-2"></i>
+                    <span>Contact Administration</span>
                 </div>
-                <p class="text-red-700 text-sm mt-1">
-                    Email: {{ $settings->contact_email ?? 'admin@bank.com' }}<br>
+                <p class="text-slate-600 text-xs leading-relaxed">
+                    Please reach out to our team at your earliest convenience to verify your details.
                 </p>
+                <div class="mt-3 pt-3 border-t border-slate-200 flex flex-col space-y-1.5 text-xs font-medium text-slate-700">
+                    <div class="flex items-center">
+                        <i data-lucide="mail" class="h-3.5 w-3.5 text-slate-400 mr-2"></i>
+                        <span>Email: <a href="mailto:{{ $settings->contact_email }}" class="text-primary-600 hover:underline">{{ $settings->contact_email ?? 'support@bank.com' }}</a></span>
+                    </div>
+                </div>
             </div>
 
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form-frozen').submit();"
-                class="w-full inline-flex justify-center items-center bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-medium transition duration-200">
-                <i data-lucide="log-out" class="h-5 w-5 mr-2"></i> Log Out
+            <a href="{{ route('dashboard') }}"
+                class="w-full inline-flex justify-center items-center bg-primary-600 hover:bg-primary-700 text-white py-3 px-4 rounded-xl font-semibold transition duration-200 shadow-md hover:shadow-lg">
+                <i data-lucide="home" class="h-5 w-5 mr-2"></i> Go to Homepage
             </a>
-            <form id="logout-form-frozen" action="{{ route('logout') }}" method="POST" style="display: none;">
-                {{ csrf_field() }}
-            </form>
+
+            <div class="mt-4">
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form-frozen').submit();"
+                    class="text-xs font-medium text-gray-400 hover:text-gray-600 transition">
+                    Sign out of this account
+                </a>
+                <form id="logout-form-frozen" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+            </div>
         </div>
     </div>
     @endif
