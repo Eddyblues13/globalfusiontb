@@ -399,7 +399,7 @@
                 <i data-lucide="lock" class="h-8 w-8"></i>
             </div>
 
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Access Restricted</h2>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Account Frozens</h2>
 
             <p class="text-gray-500 text-sm mb-6 leading-relaxed">
                 Your online banking account is temporarily restricted. Please contact our administration department to resolve this hold.
